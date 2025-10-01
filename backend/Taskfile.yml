@@ -1,0 +1,11 @@
+version: 3
+
+vars:
+  LOCAL_BIN:
+    sh: echo "$(pwd)/bin"
+
+tasks:
+  bin-deps:
+    cmds:
+      - test -d {{ .LOCAL_BIN }} || mkdir {{ .LOCAL_BIN }}
+      - GOBIN={{ .LOCAL_BIN }} go install tool
