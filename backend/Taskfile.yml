@@ -11,6 +11,7 @@ tasks:
     deps:
       - task: bin-deps
     cmds:
+      - PATH="{{ .PATH }}" oapi-codegen -config ./configs/openapi/error.yaml ./api/common/error.openapi.yaml
       - PATH="{{ .PATH }}" oapi-codegen -config ./configs/openapi/profile.yaml ./api/v1/profile.openapi.yaml
       - go mod tidy
       - go mod vendor
