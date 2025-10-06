@@ -1,0 +1,5 @@
+package: profile
+generate:
+  - types
+  - chi-server
+output: internal/api/v1/profile/server.gen.go

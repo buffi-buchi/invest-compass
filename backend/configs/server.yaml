@@ -1,0 +1,4 @@
+server:
+  address: localhost:8000
+debug_server:
+  address: localhost:8004

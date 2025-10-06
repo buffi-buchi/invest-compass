@@ -3,8 +3,17 @@ version: 3
 vars:
   LOCAL_BIN:
     sh: echo "$(pwd)/bin"
+  PATH:
+    sh: echo "{{ .LOCAL_BIN }}:{{ env "PATH" }}"
 
 tasks:
+  generate:
+    deps:
+      - task: bin-deps
+    cmds:
+      - PATH="{{ .PATH }}" oapi-codegen -config ./configs/openapi/profile.yaml ./api/v1/profile.openapi.yaml
+      - go mod tidy
+      - go mod vendor
   bin-deps:
     cmds:
       - test -d {{ .LOCAL_BIN }} || mkdir {{ .LOCAL_BIN }}
