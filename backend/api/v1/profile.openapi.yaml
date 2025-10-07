@@ -14,6 +14,8 @@ paths:
       operationId: GetProfiles
       tags:
         - profiles
+      security:
+        - BearerAuth: [ ]
       responses:
         '200':
           $ref: '#/components/responses/GetProfilesResponse'
@@ -25,10 +27,20 @@ components:
     Profile:
       type: object
       required:
+        - user_id
         - ticker
       properties:
+        user_id:
+          type: string
+          format: uuid
         ticker:
           type: string
+
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
 
   responses:
     GetProfilesResponse:

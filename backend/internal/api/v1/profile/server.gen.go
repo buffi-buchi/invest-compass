@@ -4,15 +4,22 @@
 package profile
 
 import (
+	"context"
 	"fmt"
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
+	openapi_types "github.com/oapi-codegen/runtime/types"
+)
+
+const (
+	BearerAuthScopes = "BearerAuth.Scopes"
 )
 
 // Profile defines model for Profile.
 type Profile struct {
-	Ticker string `json:"ticker"`
+	Ticker string             `json:"ticker"`
+	UserId openapi_types.UUID `json:"user_id"`
 }
 
 // GetProfilesResponse defines model for GetProfilesResponse.
@@ -47,6 +54,12 @@ type MiddlewareFunc func(http.Handler) http.Handler
 
 // GetProfiles operation middleware
 func (siw *ServerInterfaceWrapper) GetProfiles(w http.ResponseWriter, r *http.Request) {
+
+	ctx := r.Context()
+
+	ctx = context.WithValue(ctx, BearerAuthScopes, []string{})
+
+	r = r.WithContext(ctx)
 
 	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		siw.Handler.GetProfiles(w, r)

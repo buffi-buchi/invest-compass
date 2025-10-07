@@ -1,9 +1,17 @@
 package profile
 
+import "go.uber.org/zap"
+
 type Implementation struct {
 	Unimplemented
+
+	service Service
+	logger  *zap.SugaredLogger
 }
 
-func NewImplementation() *Implementation {
-	return &Implementation{}
+func NewImplementation(service Service, logger *zap.SugaredLogger) *Implementation {
+	return &Implementation{
+		service: service,
+		logger:  logger,
+	}
 }

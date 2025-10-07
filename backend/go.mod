@@ -10,6 +10,8 @@ tool (
 
 require (
 	github.com/go-chi/chi/v5 v5.2.3
+	github.com/google/uuid v1.6.0
+	github.com/oapi-codegen/runtime v1.1.2
 	go.opentelemetry.io/otel/exporters/otlp/otlpmetric/otlpmetrichttp v1.38.0
 	go.uber.org/zap v1.27.0
 	gopkg.in/yaml.v3 v3.0.1
@@ -26,7 +28,6 @@ require (
 	github.com/go-openapi/swag v0.23.0 // indirect
 	github.com/gojuno/minimock/v3 v3.4.5 // indirect
 	github.com/google/go-cmp v0.7.0 // indirect
-	github.com/google/uuid v1.6.0 // indirect
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.27.2 // indirect
 	github.com/hexdigest/gowrap v1.4.2 // indirect
 	github.com/josharian/intern v1.0.0 // indirect
