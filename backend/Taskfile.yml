@@ -12,7 +12,9 @@ tasks:
       - task: bin-deps
     cmds:
       - PATH="{{ .PATH }}" oapi-codegen -config ./configs/openapi/error.yaml ./api/common/error.openapi.yaml
+      - PATH="{{ .PATH }}" oapi-codegen -config ./configs/openapi/auth.yaml ./api/v1/auth.openapi.yaml
       - PATH="{{ .PATH }}" oapi-codegen -config ./configs/openapi/profile.yaml ./api/v1/profile.openapi.yaml
+      - PATH="{{ .PATH }}" oapi-codegen -config ./configs/openapi/user.yaml ./api/v1/user.openapi.yaml
       - go mod tidy
       - go mod vendor
   bin-deps:

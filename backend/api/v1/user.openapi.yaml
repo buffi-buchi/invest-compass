@@ -1,0 +1,67 @@
+openapi: 3.0.0
+info:
+  title: User API
+  description: User API describes handlers to manage users
+  version: 0.1.0
+
+servers:
+  - url: http://localhost:8080/api
+    description: Server for local development
+
+paths:
+  /v1/users:
+    post:
+      operationId: CreateUser
+      tags:
+        - users
+      requestBody:
+        $ref: '#/components/requestBodies/CreateUserRequest'
+      responses:
+        '201':
+          $ref: '#/components/responses/CreateUserResponse'
+        'default':
+          $ref: '../common/error.openapi.yaml#/components/responses/ErrorResponse'
+
+components:
+  schemas:
+    User:
+      type: object
+      required:
+        - id
+        - email
+      properties:
+        id:
+          type: string
+          format: uuid
+        email:
+          type: string
+
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  requestBodies:
+    CreateUserRequest:
+      description: ''
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - email
+              - password
+            properties:
+              email:
+                type: string
+              password:
+                type: string
+
+  responses:
+    CreateUserResponse:
+      description: ''
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/User'

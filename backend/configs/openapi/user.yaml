@@ -1,0 +1,9 @@
+package: user
+output: internal/api/v1/user/server.gen.go
+generate:
+  models: true
+  chi-server: true
+output-options:
+  skip-prune: true
+import-mapping:
+  ../common/error.openapi.yaml: github.com/buffi-buchi/invest-compass/backend/internal/api
