@@ -7,5 +7,5 @@ import (
 )
 
 type Service interface {
-	CreateUser(ctx context.Context, user model.User) (model.User, error)
+	Create(ctx context.Context, user model.User) (model.User, error)
 }

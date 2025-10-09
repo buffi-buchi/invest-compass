@@ -19,7 +19,7 @@ func (i *Implementation) CreateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	user, err := i.service.CreateUser(r.Context(), model.User{
+	user, err := i.service.Create(r.Context(), model.User{
 		Email:    request.Email,
 		Password: request.Password,
 	})
