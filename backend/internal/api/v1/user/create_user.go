@@ -12,7 +12,7 @@ import (
 func (i *Implementation) CreateUser(w http.ResponseWriter, r *http.Request) {
 	request, err := api.DecodeRequest[CreateUserRequest](r)
 	if err != nil {
-		i.logger.Errorw("Decode create user request", zap.Error(err))
+		i.logger.Error("Decode create user request", zap.Error(err))
 
 		api.EncodeErrorf(w, http.StatusBadRequest, "Invalid request: %s", err)
 
@@ -24,7 +24,7 @@ func (i *Implementation) CreateUser(w http.ResponseWriter, r *http.Request) {
 		Password: request.Password,
 	})
 	if err != nil {
-		i.logger.Errorw("Create user", zap.Error(err))
+		i.logger.Error("Create user", zap.Error(err))
 
 		api.EncodeErrorf(w, http.StatusInternalServerError, "Create user error")
 

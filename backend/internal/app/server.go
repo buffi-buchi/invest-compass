@@ -10,7 +10,16 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/go-chi/chi/v5"
+	"github.com/jackc/pgx/v5/pgxpool"
 	"go.uber.org/zap"
+
+	authapi "github.com/buffi-buchi/invest-compass/backend/internal/api/v1/auth"
+	profileapi "github.com/buffi-buchi/invest-compass/backend/internal/api/v1/profile"
+	userapi "github.com/buffi-buchi/invest-compass/backend/internal/api/v1/user"
+	"github.com/buffi-buchi/invest-compass/backend/internal/domain/auth"
+	"github.com/buffi-buchi/invest-compass/backend/internal/provider/jwt"
+	"github.com/buffi-buchi/invest-compass/backend/internal/provider/postgres"
 )
 
 func RunServer() error {
@@ -37,13 +46,43 @@ func RunServer() error {
 		return fmt.Errorf("read config: %w", err)
 	}
 
+	// Configure database connection.
+	var db *pgxpool.Pool
+
+	// Configure providers.
+	jwtProvider := jwt.NewProvider([]byte("secretkey"), "server", 30*time.Minute)
+
+	// Configure stores.
+	userStore := postgres.NewUserStore(db)
+	profileStore := postgres.NewProfileStore(db)
+	_ = profileStore
+
+	// Configure services.
+	authService := auth.NewService(userStore, jwtProvider)
+
+	// Configure controllers.
+	authController := authapi.NewImplementation(authService, logger)
+	userController := userapi.NewImplementation(userStore, logger)
+	profileController := profileapi.NewImplementation(nil, logger)
+
 	// Start HTTP servers.
+
+	mux := chi.NewMux()
+
+	authController.Register(mux)
+	userController.Register(mux)
+	profileController.Register(mux)
+
 	server := http.Server{
-		Addr: config.Server.Address,
+		Addr:    config.Server.Address,
+		Handler: mux,
 	}
 
+	mux = chi.NewMux()
+
 	debugServer := http.Server{
-		Addr: config.DebugServer.Address,
+		Addr:    config.DebugServer.Address,
+		Handler: mux,
 	}
 
 	ctx, cancel := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)

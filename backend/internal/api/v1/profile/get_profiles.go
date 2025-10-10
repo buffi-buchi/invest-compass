@@ -17,7 +17,7 @@ func (i *Implementation) GetProfiles(w http.ResponseWriter, r *http.Request) {
 
 	profiles, err := i.service.GetProfilesByUserID(r.Context(), userID)
 	if err != nil {
-		i.logger.Errorw("Get profiles by user ID", zap.Error(err))
+		i.logger.Error("Get profiles by user ID", zap.Error(err))
 
 		api.EncodeErrorf(w, http.StatusInternalServerError, "Get profiles by user ID")
 
