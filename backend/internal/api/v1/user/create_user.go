@@ -32,8 +32,9 @@ func (i *Implementation) CreateUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	response := CreateUserResponse{
-		Id:    user.ID,
-		Email: user.Email,
+		Id:         user.ID,
+		Email:      user.Email,
+		CreateTime: user.CreateTime,
 	}
 
 	api.EncodeSuccess(w, http.StatusCreated, response)

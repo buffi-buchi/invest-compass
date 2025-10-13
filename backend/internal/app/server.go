@@ -19,6 +19,7 @@ import (
 	profileapi "github.com/buffi-buchi/invest-compass/backend/internal/api/v1/profile"
 	userapi "github.com/buffi-buchi/invest-compass/backend/internal/api/v1/user"
 	"github.com/buffi-buchi/invest-compass/backend/internal/domain/auth"
+	"github.com/buffi-buchi/invest-compass/backend/internal/domain/user"
 	"github.com/buffi-buchi/invest-compass/backend/internal/provider/jwt"
 	"github.com/buffi-buchi/invest-compass/backend/internal/provider/postgres"
 )
@@ -69,13 +70,14 @@ func RunServer() error {
 
 	// Configure services.
 	authService := auth.NewService(userStore, jwtProvider)
+	userService := user.NewService(userStore)
 
 	// Configure middlewares.
 	authMiddleware := middleware.NewAuthMiddleware(jwtProvider)
 
 	// Configure controllers.
 	authController := authapi.NewImplementation(authService, logger)
-	userController := userapi.NewImplementation(userStore, logger)
+	userController := userapi.NewImplementation(userService, logger)
 	profileController := profileapi.NewImplementation(profileStore, authMiddleware, logger)
 
 	// Start HTTP servers.

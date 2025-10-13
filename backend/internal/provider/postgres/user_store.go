@@ -25,20 +25,28 @@ var (
 
 type UserStore struct {
 	db  *pgxpool.Pool
+	id  func() (uuid.UUID, error)
 	now func() time.Time
 }
 
 func NewUserStore(db *pgxpool.Pool) *UserStore {
 	return &UserStore{
 		db:  db,
+		id:  func() (uuid.UUID, error) { return uuid.NewV7() },
 		now: func() time.Time { return time.Now().UTC() },
 	}
 }
 
 func (s *UserStore) Create(ctx context.Context, user model.User) (model.User, error) {
-	row := s.db.QueryRow(ctx, createUserQuery, user.Email, user.Password, s.now())
+	id, err := s.id()
+	if err != nil {
+		return model.User{}, fmt.Errorf("create user ID: %w", err)
+	}
 
-	err := row.Scan(&user.ID, &user.CreateTime)
+	user.ID = id
+	user.CreateTime = s.now()
+
+	_, err = s.db.Exec(ctx, createUserQuery, user.ID, user.Email, user.Password, user.CreateTime)
 	if err != nil {
 		return model.User{}, fmt.Errorf("insert user: %w", err)
 	}
@@ -69,5 +77,5 @@ func (s *UserStore) GetByEmail(ctx context.Context, email string) (model.User, e
 		return model.User{}, fmt.Errorf("select user by email: %w", err)
 	}
 
-	return model.User{}, nil
+	return user, nil
 }
