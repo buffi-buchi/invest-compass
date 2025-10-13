@@ -9,5 +9,10 @@ import (
 )
 
 type Service interface {
-	GetProfilesByUserID(ctx context.Context, userID uuid.UUID) ([]model.Profile, error)
+	GeByUserID(
+		ctx context.Context,
+		userID uuid.UUID,
+		limit int64,
+		offset int64,
+	) ([]model.Profile, error)
 }

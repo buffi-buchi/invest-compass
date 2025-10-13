@@ -27,14 +27,22 @@ components:
     Profile:
       type: object
       required:
+        - id
         - user_id
-        - ticker
+        - name
+        - create_time
       properties:
+        id:
+          type: string
+          format: uuid
         user_id:
           type: string
           format: uuid
-        ticker:
+        name:
           type: string
+        create_time:
+          type: string
+          format: date-time
 
   securitySchemes:
     BearerAuth:

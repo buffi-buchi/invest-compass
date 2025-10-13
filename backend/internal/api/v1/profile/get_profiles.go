@@ -14,8 +14,9 @@ func (i *Implementation) GetProfiles(w http.ResponseWriter, r *http.Request) {
 
 	// TODO: Implement authentication.
 	// TODO: Get userID from context.
+	// TODO: Use limit offset.
 
-	profiles, err := i.service.GetProfilesByUserID(r.Context(), userID)
+	profiles, err := i.service.GeByUserID(r.Context(), userID, 10, 0)
 	if err != nil {
 		i.logger.Error("Get profiles by user ID", zap.Error(err))
 
@@ -30,8 +31,10 @@ func (i *Implementation) GetProfiles(w http.ResponseWriter, r *http.Request) {
 
 	for _, profile := range profiles {
 		response.Profiles = append(response.Profiles, Profile{
-			UserId: profile.UserID,
-			Ticker: profile.Ticker,
+			Id:         profile.ID,
+			UserId:     profile.UserID,
+			Name:       profile.Name,
+			CreateTime: profile.CreateTime,
 		})
 	}
 

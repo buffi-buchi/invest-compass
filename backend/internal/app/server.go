@@ -14,6 +14,7 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 	"go.uber.org/zap"
 
+	"github.com/buffi-buchi/invest-compass/backend/internal/api/middleware"
 	authapi "github.com/buffi-buchi/invest-compass/backend/internal/api/v1/auth"
 	profileapi "github.com/buffi-buchi/invest-compass/backend/internal/api/v1/profile"
 	userapi "github.com/buffi-buchi/invest-compass/backend/internal/api/v1/user"
@@ -47,23 +48,35 @@ func RunServer() error {
 	}
 
 	// Configure database connection.
-	var db *pgxpool.Pool
+	dbConfig, err := pgxpool.ParseConfig(config.Postgres.ConnectionString)
+	if err != nil {
+		logger.Error("Parse database config", zap.Error(err))
+		return fmt.Errorf("parse database config: %w", err)
+	}
+
+	pool, err := pgxpool.NewWithConfig(context.TODO(), dbConfig)
+	if err != nil {
+		logger.Error("Create database pool", zap.Error(err))
+		return fmt.Errorf("create pool: %w", err)
+	}
 
 	// Configure providers.
 	jwtProvider := jwt.NewProvider([]byte("secretkey"), "server", 30*time.Minute)
 
 	// Configure stores.
-	userStore := postgres.NewUserStore(db)
-	profileStore := postgres.NewProfileStore(db)
-	_ = profileStore
+	userStore := postgres.NewUserStore(pool)
+	profileStore := postgres.NewProfileStore(pool)
 
 	// Configure services.
 	authService := auth.NewService(userStore, jwtProvider)
 
+	// Configure middlewares.
+	authMiddleware := middleware.NewAuthMiddleware(jwtProvider)
+
 	// Configure controllers.
 	authController := authapi.NewImplementation(authService, logger)
 	userController := userapi.NewImplementation(userStore, logger)
-	profileController := profileapi.NewImplementation(nil, logger)
+	profileController := profileapi.NewImplementation(profileStore, authMiddleware, logger)
 
 	// Start HTTP servers.
 
