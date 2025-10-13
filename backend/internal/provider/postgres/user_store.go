@@ -3,10 +3,12 @@ package postgres
 import (
 	"context"
 	_ "embed"
+	"errors"
 	"fmt"
-	"github.com/google/uuid"
 	"time"
 
+	"github.com/google/uuid"
+	"github.com/jackc/pgx/v5/pgconn"
 	"github.com/jackc/pgx/v5/pgxpool"
 
 	"github.com/buffi-buchi/invest-compass/backend/internal/domain/model"
@@ -48,6 +50,13 @@ func (s *UserStore) Create(ctx context.Context, user model.User) (model.User, er
 
 	_, err = s.db.Exec(ctx, createUserQuery, user.ID, user.Email, user.Password, user.CreateTime)
 	if err != nil {
+		// TODO: Add function to check postgres err.
+		var pgErr *pgconn.PgError
+		if errors.As(err, &pgErr) {
+			if pgErr.Code == "23505" {
+				return model.User{}, errors.Join(errors.New("user already exists"), model.ErrAlreadyExists)
+			}
+		}
 		return model.User{}, fmt.Errorf("insert user: %w", err)
 	}
 

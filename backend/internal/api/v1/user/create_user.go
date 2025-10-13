@@ -1,6 +1,7 @@
 package user
 
 import (
+	"errors"
 	"net/http"
 
 	"go.uber.org/zap"
@@ -23,6 +24,13 @@ func (i *Implementation) CreateUser(w http.ResponseWriter, r *http.Request) {
 		Email:    request.Email,
 		Password: request.Password,
 	})
+	if errors.Is(err, model.ErrAlreadyExists) {
+		i.logger.Error("User already exists", zap.Error(err))
+
+		api.EncodeErrorf(w, http.StatusConflict, "User already exists")
+
+		return
+	}
 	if err != nil {
 		i.logger.Error("Create user", zap.Error(err))
 
