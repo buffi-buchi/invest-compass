@@ -1,0 +1,53 @@
+openapi: 3.0.0
+info:
+  title: Auth API
+  description: Auth API describes handlers to authenticate users
+  version: 0.1.0
+
+servers:
+  - url: http://localhost:8080/api
+    description: Server for local development
+
+paths:
+  /v1/login:
+    post:
+      operationId: Login
+      tags:
+        - auth
+      requestBody:
+        $ref: '#/components/requestBodies/LoginRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/LoginResponse'
+        'default':
+          $ref: '../common/error.openapi.yaml#/components/responses/ErrorResponse'
+
+components:
+  requestBodies:
+    LoginRequest:
+      description: ''
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - email
+              - password
+            properties:
+              email:
+                type: string
+              password:
+                type: string
+
+  responses:
+    LoginResponse:
+      description: ''
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - token
+            properties:
+              token:
+                type: string

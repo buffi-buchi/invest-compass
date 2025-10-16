@@ -1,0 +1,39 @@
+volumes:
+  pg_data:
+
+networks:
+  db:
+
+services:
+  server:
+    build:
+      dockerfile: ./build/Dockerfile
+      args:
+        APP_PATH: ./cmd/server
+    restart: unless-stopped
+    networks:
+      - db
+    ports:
+      - "8000:80"
+      - "8004:84"
+    volumes:
+      - "./configs/server.yaml:server.yaml"
+    environment:
+      SERVER_CONFIG_PATH: server.yaml
+    depends_on:
+      - postgres
+  postgres:
+    image: postgres:17-alpine3.22
+    restart: unless-stopped
+    command: >
+      --log_statement=all
+    networks:
+      - db
+    ports:
+      - "5432:5432"
+    volumes:
+      - "pg_data:/var/lib/postgresql/data"
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres

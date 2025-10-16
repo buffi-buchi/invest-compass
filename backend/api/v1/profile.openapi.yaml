@@ -1,0 +1,58 @@
+openapi: 3.0.0
+info:
+  title: Profile API
+  description: Profile API describes handlers to manage user's profiles
+  version: 0.1.0
+
+servers:
+  - url: http://localhost:8080/api
+    description: Server for local development
+
+paths:
+  /v1/profiles:
+    get:
+      operationId: GetProfiles
+      tags:
+        - profiles
+      security:
+        - BearerAuth: [ ]
+      responses:
+        '200':
+          $ref: '#/components/responses/GetProfilesResponse'
+        'default':
+          $ref: '../common/error.openapi.yaml#/components/responses/ErrorResponse'
+
+components:
+  schemas:
+    Profile:
+      type: object
+      required:
+        - user_id
+        - ticker
+      properties:
+        user_id:
+          type: string
+          format: uuid
+        ticker:
+          type: string
+
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  responses:
+    GetProfilesResponse:
+      description: ''
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - profiles
+            properties:
+              profiles:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Profile'

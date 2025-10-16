@@ -1,0 +1,85 @@
+package app
+
+import (
+	"context"
+	"errors"
+	"fmt"
+	"net/http"
+	"os"
+	"os/signal"
+	"syscall"
+	"time"
+
+	"go.uber.org/zap"
+)
+
+func RunServer() error {
+	// Configure logger.
+	logger, err := NewLogger()
+	if err != nil {
+		return err
+	}
+
+	defer logger.Sync()
+
+	// Read configuration.
+	const envVarConfigPath = "SERVER_CONFIG_PATH"
+
+	configPath := os.Getenv(envVarConfigPath)
+	if configPath == "" {
+		logger.Error("Config path is required")
+		return errors.New("config path is required")
+	}
+
+	config, err := ReadConfig(configPath)
+	if err != nil {
+		logger.Error("Read config", zap.Error(err))
+		return fmt.Errorf("read config: %w", err)
+	}
+
+	// Start HTTP servers.
+	server := http.Server{
+		Addr: config.Server.Address,
+	}
+
+	debugServer := http.Server{
+		Addr: config.DebugServer.Address,
+	}
+
+	ctx, cancel := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
+	defer cancel()
+
+	go func() {
+		logger.Info("Starting server", zap.String("address", server.Addr))
+
+		if err := server.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
+			logger.Error("Start server", zap.Error(err))
+			cancel()
+		}
+	}()
+
+	go func() {
+		logger.Info("Starting debug server", zap.String("address", debugServer.Addr))
+
+		if err := debugServer.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
+			logger.Error("Start debug server", zap.Error(err))
+			cancel()
+		}
+	}()
+
+	// Graceful shutdown.
+	<-ctx.Done()
+
+	ctx, cancel = context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	logger.Info("Shutting down server")
+	_ = server.Shutdown(ctx)
+
+	logger.Info("Shutting down debug server")
+	_ = debugServer.Shutdown(ctx)
+
+	logger.Info("Application stopped")
+
+	return nil
+}
