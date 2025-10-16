@@ -29,12 +29,16 @@ components:
       required:
         - id
         - email
+        - create_time
       properties:
         id:
           type: string
           format: uuid
         email:
           type: string
+        create_time:
+          type: string
+          format: date-time
 
   securitySchemes:
     BearerAuth:

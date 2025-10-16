@@ -3,10 +3,12 @@
 
 CREATE TABLE IF NOT EXISTS profiles
 (
-    user_id UUID    NOT NULL,
-    ticker  VARCHAR NOT NULL,
+    id          UUID        NOT NULL,
+    user_id     UUID        NOT NULL,
+    name        VARCHAR     NOT NULL,
+    create_time TIMESTAMPTZ NOT NULL DEFAULT now(),
 
-    PRIMARY KEY (user_id, ticker),
+    PRIMARY KEY (id),
     FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
 );
 

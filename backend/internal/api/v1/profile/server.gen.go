@@ -7,6 +7,7 @@ import (
 	"context"
 	"fmt"
 	"net/http"
+	"time"
 
 	"github.com/go-chi/chi/v5"
 	openapi_types "github.com/oapi-codegen/runtime/types"
@@ -18,8 +19,10 @@ const (
 
 // Profile defines model for Profile.
 type Profile struct {
-	Ticker string             `json:"ticker"`
-	UserId openapi_types.UUID `json:"user_id"`
+	CreateTime time.Time          `json:"create_time"`
+	Id         openapi_types.UUID `json:"id"`
+	Name       string             `json:"name"`
+	UserId     openapi_types.UUID `json:"user_id"`
 }
 
 // GetProfilesResponse defines model for GetProfilesResponse.

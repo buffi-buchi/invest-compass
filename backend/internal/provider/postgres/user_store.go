@@ -3,10 +3,12 @@ package postgres
 import (
 	"context"
 	_ "embed"
+	"errors"
 	"fmt"
-	"github.com/google/uuid"
 	"time"
 
+	"github.com/google/uuid"
+	"github.com/jackc/pgx/v5/pgconn"
 	"github.com/jackc/pgx/v5/pgxpool"
 
 	"github.com/buffi-buchi/invest-compass/backend/internal/domain/model"
@@ -25,21 +27,36 @@ var (
 
 type UserStore struct {
 	db  *pgxpool.Pool
+	id  func() (uuid.UUID, error)
 	now func() time.Time
 }
 
 func NewUserStore(db *pgxpool.Pool) *UserStore {
 	return &UserStore{
 		db:  db,
+		id:  func() (uuid.UUID, error) { return uuid.NewV7() },
 		now: func() time.Time { return time.Now().UTC() },
 	}
 }
 
 func (s *UserStore) Create(ctx context.Context, user model.User) (model.User, error) {
-	row := s.db.QueryRow(ctx, createUserQuery, user.Email, user.Password, s.now())
-
-	err := row.Scan(&user.ID, &user.CreateTime)
+	id, err := s.id()
 	if err != nil {
+		return model.User{}, fmt.Errorf("create user ID: %w", err)
+	}
+
+	user.ID = id
+	user.CreateTime = s.now()
+
+	_, err = s.db.Exec(ctx, createUserQuery, user.ID, user.Email, user.Password, user.CreateTime)
+	if err != nil {
+		// TODO: Add function to check postgres err.
+		var pgErr *pgconn.PgError
+		if errors.As(err, &pgErr) {
+			if pgErr.Code == "23505" {
+				return model.User{}, errors.Join(errors.New("user already exists"), model.ErrAlreadyExists)
+			}
+		}
 		return model.User{}, fmt.Errorf("insert user: %w", err)
 	}
 
@@ -69,5 +86,5 @@ func (s *UserStore) GetByEmail(ctx context.Context, email string) (model.User, e
 		return model.User{}, fmt.Errorf("select user by email: %w", err)
 	}
 
-	return model.User{}, nil
+	return user, nil
 }

@@ -11,7 +11,7 @@ import (
 func (i *Implementation) Login(w http.ResponseWriter, r *http.Request) {
 	request, err := api.DecodeRequest[LoginRequest](r)
 	if err != nil {
-		i.logger.Errorw("Decode login request", zap.Error(err))
+		i.logger.Error("Decode login request", zap.Error(err))
 
 		api.EncodeErrorf(w, http.StatusBadRequest, "Invalid request: %s", err)
 
@@ -20,7 +20,7 @@ func (i *Implementation) Login(w http.ResponseWriter, r *http.Request) {
 
 	token, err := i.service.Login(r.Context(), request.Email, request.Password)
 	if err != nil {
-		i.logger.Errorw("Login", zap.Error(err))
+		i.logger.Error("Login", zap.Error(err))
 
 		api.EncodeErrorf(w, http.StatusUnauthorized, "Unauthenticated")
 
