@@ -24,8 +24,8 @@ func NewImplementation(service Service, auth middleware.Middleware, logger *zap.
 }
 
 func (i *Implementation) Register(mux *chi.Mux) {
-	mux.Group(func(r chi.Router) {
-		r.Use(i.auth)
-		r.Get("/v1/profiles", i.GetProfiles)
+	HandlerWithOptions(i, ChiServerOptions{
+		BaseRouter:  mux,
+		Middlewares: []MiddlewareFunc{i.auth},
 	})
 }
