@@ -87,13 +87,18 @@ func TestImplementation_GetProfiles(t *testing.T) {
 
 			handler := tc.handler(mc)
 
-			gotResp, gotStatusCode := httptest.DoRequest(t, func(w http.ResponseWriter, r *http.Request) {
-				ctx := model.WithAuthClaims(r.Context(), model.AuthClaims{
-					UserID: userID,
-				})
-				r = r.WithContext(ctx)
-				handler.GetProfiles(w, r)
-			}, tc.req)
+			c := httptest.Case{
+				Handler: func(w http.ResponseWriter, r *http.Request) {
+					ctx := model.WithAuthClaims(r.Context(), model.AuthClaims{
+						UserID: userID,
+					})
+					r = r.WithContext(ctx)
+					handler.GetProfiles(w, r)
+				},
+				ReqBody: tc.req,
+			}
+
+			gotResp, gotStatusCode := c.Do(t)
 			assert.Equal(t, tc.wantCode, gotStatusCode)
 			assert.JSONEq(t, string(tc.wantResp), string(gotResp))
 		})

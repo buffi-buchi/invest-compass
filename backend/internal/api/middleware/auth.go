@@ -8,6 +8,8 @@ import (
 	"github.com/buffi-buchi/invest-compass/backend/internal/domain/model"
 )
 
+//go:generate go tool minimock -g -i JWTProvider
+
 type JWTProvider interface {
 	Validate(token string) (model.AuthClaims, error)
 }

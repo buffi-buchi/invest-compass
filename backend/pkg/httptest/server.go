@@ -10,21 +10,32 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-//TODO: Make struct for customize HTTP method, pattern and headers in request.
+type Case struct {
+	Handler http.HandlerFunc
+	ReqBody []byte
+	Pattern string
+	Headers http.Header
+}
 
-func DoRequest(
-	t *testing.T,
-	handler http.HandlerFunc,
-	reqBody []byte,
-) ([]byte, int) {
+func (c *Case) Do(t *testing.T) ([]byte, int) {
+	if c.Pattern == "" {
+		c.Pattern = "/"
+	}
+
 	mux := http.NewServeMux()
-	mux.Handle("/", handler)
+	mux.Handle(c.Pattern, c.Handler)
 
 	server := httptest.NewServer(mux)
 	defer server.Close()
 
-	req, err := http.NewRequest("", server.URL, bytes.NewBuffer(reqBody))
+	req, err := http.NewRequest("", server.URL+c.Pattern, bytes.NewBuffer(c.ReqBody))
 	require.NoError(t, err)
+
+	for key, values := range c.Headers {
+		for _, value := range values {
+			req.Header.Add(key, value)
+		}
+	}
 
 	resp, err := server.Client().Do(req)
 	require.NoError(t, err)

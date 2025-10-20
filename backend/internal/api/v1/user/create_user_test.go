@@ -146,7 +146,12 @@ func TestImplementation_CreateUser(t *testing.T) {
 
 			handler := tc.handler(mc)
 
-			gotResp, gotStatusCode := httptest.DoRequest(t, handler.CreateUser, tc.req)
+			c := httptest.Case{
+				Handler: handler.CreateUser,
+				ReqBody: tc.req,
+			}
+
+			gotResp, gotStatusCode := c.Do(t)
 			assert.Equal(t, tc.wantCode, gotStatusCode)
 			assert.JSONEq(t, string(tc.wantResp), string(gotResp))
 		})
