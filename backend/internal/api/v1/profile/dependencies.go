@@ -8,6 +8,13 @@ import (
 	"github.com/buffi-buchi/invest-compass/backend/internal/domain/model"
 )
 
+//go:generate go tool minimock -g -i Service
+
 type Service interface {
-	GetProfilesByUserID(ctx context.Context, userID uuid.UUID) ([]model.Profile, error)
+	GeByUserID(
+		ctx context.Context,
+		userID uuid.UUID,
+		limit int64,
+		offset int64,
+	) ([]model.Profile, error)
 }

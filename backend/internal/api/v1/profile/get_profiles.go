@@ -3,21 +3,20 @@ package profile
 import (
 	"net/http"
 
-	"github.com/google/uuid"
 	"go.uber.org/zap"
 
 	"github.com/buffi-buchi/invest-compass/backend/internal/api"
+	"github.com/buffi-buchi/invest-compass/backend/internal/domain/model"
 )
 
 func (i *Implementation) GetProfiles(w http.ResponseWriter, r *http.Request) {
-	userID := uuid.New()
+	claims, _ := model.AuthClaimsValue(r.Context())
 
-	// TODO: Implement authentication.
-	// TODO: Get userID from context.
+	// TODO: Use limit offset.
 
-	profiles, err := i.service.GetProfilesByUserID(r.Context(), userID)
+	profiles, err := i.service.GeByUserID(r.Context(), claims.UserID, 10, 0)
 	if err != nil {
-		i.logger.Errorw("Get profiles by user ID", zap.Error(err))
+		i.logger.Error("Get profiles by user ID", zap.Error(err))
 
 		api.EncodeErrorf(w, http.StatusInternalServerError, "Get profiles by user ID")
 
@@ -30,8 +29,10 @@ func (i *Implementation) GetProfiles(w http.ResponseWriter, r *http.Request) {
 
 	for _, profile := range profiles {
 		response.Profiles = append(response.Profiles, Profile{
-			UserId: profile.UserID,
-			Ticker: profile.Ticker,
+			Id:         profile.ID,
+			UserId:     profile.UserID,
+			Name:       profile.Name,
+			CreateTime: profile.CreateTime,
 		})
 	}
 

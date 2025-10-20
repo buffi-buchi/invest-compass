@@ -6,6 +6,7 @@ package user
 import (
 	"fmt"
 	"net/http"
+	"time"
 
 	"github.com/go-chi/chi/v5"
 	openapi_types "github.com/oapi-codegen/runtime/types"
@@ -13,8 +14,9 @@ import (
 
 // User defines model for User.
 type User struct {
-	Email string             `json:"email"`
-	Id    openapi_types.UUID `json:"id"`
+	CreateTime time.Time          `json:"create_time"`
+	Email      string             `json:"email"`
+	Id         openapi_types.UUID `json:"id"`
 }
 
 // CreateUserResponse defines model for CreateUserResponse.

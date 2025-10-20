@@ -1,10 +1,14 @@
 package model
 
 import (
+	"time"
+
 	"github.com/google/uuid"
 )
 
 type Profile struct {
-	UserID uuid.UUID
-	Ticker string
+	ID         uuid.UUID
+	UserID     uuid.UUID
+	Name       string
+	CreateTime time.Time
 }

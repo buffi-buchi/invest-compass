@@ -29,8 +29,9 @@ func ReadConfig(path string) (Config, error) {
 }
 
 type Config struct {
-	Server      ServerConfig `yaml:"server"`
-	DebugServer ServerConfig `yaml:"debug_server"`
+	Server      ServerConfig   `yaml:"server"`
+	DebugServer ServerConfig   `yaml:"debug_server"`
+	Postgres    PostgresConfig `yaml:"postgres"`
 }
 
 func (c Config) Validate() error {
@@ -40,6 +41,10 @@ func (c Config) Validate() error {
 
 	if err := c.DebugServer.Validate(); err != nil {
 		return fmt.Errorf("validate debug server config: %w", err)
+	}
+
+	if err := c.Postgres.Validate(); err != nil {
+		return fmt.Errorf("validate postgres config: %w", err)
 	}
 
 	return nil
@@ -52,6 +57,18 @@ type ServerConfig struct {
 func (c ServerConfig) Validate() error {
 	if c.Address == "" {
 		return fmt.Errorf("address is required")
+	}
+
+	return nil
+}
+
+type PostgresConfig struct {
+	ConnectionString string `yaml:"connection_string"`
+}
+
+func (c PostgresConfig) Validate() error {
+	if c.ConnectionString == "" {
+		return fmt.Errorf("connection string is required")
 	}
 
 	return nil

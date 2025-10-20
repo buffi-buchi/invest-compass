@@ -1,17 +1,31 @@
 package profile
 
-import "go.uber.org/zap"
+import (
+	"github.com/go-chi/chi/v5"
+	"go.uber.org/zap"
+
+	"github.com/buffi-buchi/invest-compass/backend/internal/api/middleware"
+)
 
 type Implementation struct {
 	Unimplemented
 
 	service Service
-	logger  *zap.SugaredLogger
+	auth    middleware.Middleware
+	logger  *zap.Logger
 }
 
-func NewImplementation(service Service, logger *zap.SugaredLogger) *Implementation {
+func NewImplementation(service Service, auth middleware.Middleware, logger *zap.Logger) *Implementation {
 	return &Implementation{
 		service: service,
+		auth:    auth,
 		logger:  logger.Named("api.v1.profile"),
 	}
+}
+
+func (i *Implementation) Register(mux *chi.Mux) {
+	HandlerWithOptions(i, ChiServerOptions{
+		BaseRouter:  mux,
+		Middlewares: []MiddlewareFunc{i.auth},
+	})
 }
