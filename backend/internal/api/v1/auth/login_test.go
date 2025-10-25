@@ -3,7 +3,6 @@ package auth
 import (
 	_ "embed"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"net/http"
 	"testing"
@@ -61,7 +60,7 @@ func TestImplementation_Login(t *testing.T) {
 
 				service.LoginMock.
 					When(minimock.AnyContext, "user@example.com", "password123").
-					Then("", errors.New("some error"))
+					Then("", assert.AnError)
 
 				return &Implementation{
 					service: service,

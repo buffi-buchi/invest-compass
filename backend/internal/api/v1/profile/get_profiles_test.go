@@ -3,7 +3,6 @@ package profile
 import (
 	_ "embed"
 	"encoding/json"
-	"errors"
 	"net/http"
 	"testing"
 	"time"
@@ -68,7 +67,7 @@ func TestImplementation_GetProfiles(t *testing.T) {
 
 				service.GeByUserIDMock.
 					When(minimock.AnyContext, userID, 10, 0).
-					Then(nil, errors.New("some error"))
+					Then(nil, assert.AnError)
 
 				return &Implementation{
 					service: service,

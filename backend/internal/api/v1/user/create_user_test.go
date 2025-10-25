@@ -3,7 +3,6 @@ package user
 import (
 	_ "embed"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"net/http"
 	"testing"
@@ -112,7 +111,7 @@ func TestImplementation_CreateUser(t *testing.T) {
 					When(minimock.AnyContext, model.User{
 						Email:    user.Email,
 						Password: user.Password,
-					}).Then(model.User{}, errors.New("some error"))
+					}).Then(model.User{}, assert.AnError)
 
 				return &Implementation{
 					service: service,
