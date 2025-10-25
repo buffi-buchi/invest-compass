@@ -2,6 +2,7 @@ package postgres
 
 import (
 	"context"
+	"database/sql"
 	_ "embed"
 	"errors"
 	"fmt"
@@ -69,11 +70,14 @@ func (s *UserStore) GetByID(ctx context.Context, id uuid.UUID) (model.User, erro
 	var user model.User
 
 	err := row.Scan(&user.ID, &user.Email, &user.Password, &user.CreateTime)
+	if errors.Is(err, sql.ErrNoRows) {
+		return model.User{}, model.ErrNotFound
+	}
 	if err != nil {
 		return model.User{}, fmt.Errorf("select user by ID: %w", err)
 	}
 
-	return model.User{}, nil
+	return user, nil
 }
 
 func (s *UserStore) GetByEmail(ctx context.Context, email string) (model.User, error) {
@@ -82,6 +86,9 @@ func (s *UserStore) GetByEmail(ctx context.Context, email string) (model.User, e
 	var user model.User
 
 	err := row.Scan(&user.ID, &user.Email, &user.Password, &user.CreateTime)
+	if errors.Is(err, sql.ErrNoRows) {
+		return model.User{}, model.ErrNotFound
+	}
 	if err != nil {
 		return model.User{}, fmt.Errorf("select user by email: %w", err)
 	}

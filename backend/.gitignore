@@ -1,4 +1,4 @@
 bin
 vendor
 
-cover.out
+cover*.out
