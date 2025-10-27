@@ -1,4 +1,4 @@
-package profile
+package portfolio
 
 import (
 	"context"
@@ -16,5 +16,5 @@ type Service interface {
 		userID uuid.UUID,
 		limit int64,
 		offset int64,
-	) ([]model.Profile, error)
+	) ([]model.Portfolio, error)
 }

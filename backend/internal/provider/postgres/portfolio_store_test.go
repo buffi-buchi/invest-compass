@@ -16,11 +16,11 @@ import (
 )
 
 var (
-	//go:embed testdata/create_test_profiles.sql
-	createTestProfilesQuery string
+	//go:embed testdata/create_test_portfolios.sql
+	createTestPortfoliosQuery string
 )
 
-func TestProfileStore_GeByUserID(t *testing.T) {
+func TestPortfolioStore_GeByUserID(t *testing.T) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
@@ -33,26 +33,26 @@ func TestProfileStore_GeByUserID(t *testing.T) {
 		{
 			name: "success",
 			run: func(t *testing.T) {
-				store := &ProfileStore{
+				store := &PortfolioStore{
 					db: db,
 				}
 
 				// Act.
 				_, err := db.Exec(ctx, createTestUserQuery)
 				require.NoError(t, err)
-				_, err = db.Exec(ctx, createTestProfilesQuery)
+				_, err = db.Exec(ctx, createTestPortfoliosQuery)
 				require.NoError(t, err)
 
-				gotProfiles, gotErr := store.GeByUserID(ctx, uuid.MustParse("463d4cc6-023a-4d54-9da5-e6445367bf21"), 10, 0)
+				gotPortfolios, gotErr := store.GeByUserID(ctx, uuid.MustParse("463d4cc6-023a-4d54-9da5-e6445367bf21"), 10, 0)
 
 				// Check.
 				require.NoError(t, gotErr)
 
-				for i := range gotProfiles {
-					gotProfiles[i].CreateTime = gotProfiles[i].CreateTime.UTC()
+				for i := range gotPortfolios {
+					gotPortfolios[i].CreateTime = gotPortfolios[i].CreateTime.UTC()
 				}
 
-				assert.ElementsMatch(t, []model.Profile{
+				assert.ElementsMatch(t, []model.Portfolio{
 					{
 						ID:         uuid.MustParse("a3e8015d-2ef2-4490-b8af-6f51f2f0e038"),
 						UserID:     uuid.MustParse("463d4cc6-023a-4d54-9da5-e6445367bf21"),
@@ -65,10 +65,10 @@ func TestProfileStore_GeByUserID(t *testing.T) {
 						Name:       "MOEXBC",
 						CreateTime: now,
 					},
-				}, gotProfiles)
+				}, gotPortfolios)
 
 				// Cleanup.
-				_, err = db.Exec(ctx, "TRUNCATE TABLE users, profiles CASCADE")
+				_, err = db.Exec(ctx, "TRUNCATE TABLE users, portfolios CASCADE")
 				require.NoError(t, err)
 			},
 		},

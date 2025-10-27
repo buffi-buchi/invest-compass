@@ -6,7 +6,7 @@ import (
 	"github.com/google/uuid"
 )
 
-type Profile struct {
+type Portfolio struct {
 	ID         uuid.UUID
 	UserID     uuid.UUID
 	Name       string

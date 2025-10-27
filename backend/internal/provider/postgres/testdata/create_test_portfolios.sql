@@ -1,4 +1,4 @@
-INSERT INTO profiles (id, user_id, name, create_time)
+INSERT INTO portfolios (id, user_id, name, create_time)
 VALUES ('a3e8015d-2ef2-4490-b8af-6f51f2f0e038',
         '463d4cc6-023a-4d54-9da5-e6445367bf21',
         'IMOEX',

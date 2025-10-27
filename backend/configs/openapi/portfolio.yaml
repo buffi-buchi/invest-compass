@@ -1,5 +1,5 @@
-package: profile
-output: internal/api/v1/profile/server.gen.go
+package: portfolio
+output: internal/api/v1/portfolio/server.gen.go
 generate:
   models: true
   chi-server: true

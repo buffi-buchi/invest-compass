@@ -16,7 +16,7 @@ import (
 
 	"github.com/buffi-buchi/invest-compass/backend/internal/api/middleware"
 	authapi "github.com/buffi-buchi/invest-compass/backend/internal/api/v1/auth"
-	profileapi "github.com/buffi-buchi/invest-compass/backend/internal/api/v1/profile"
+	portfolioapi "github.com/buffi-buchi/invest-compass/backend/internal/api/v1/portfolio"
 	userapi "github.com/buffi-buchi/invest-compass/backend/internal/api/v1/user"
 	"github.com/buffi-buchi/invest-compass/backend/internal/domain/auth"
 	"github.com/buffi-buchi/invest-compass/backend/internal/domain/user"
@@ -66,7 +66,7 @@ func RunServer() error {
 
 	// Configure stores.
 	userStore := postgres.NewUserStore(pool)
-	profileStore := postgres.NewProfileStore(pool)
+	portfolioStore := postgres.NewPortfolioStore(pool)
 
 	// Configure services.
 	authService := auth.NewService(userStore, jwtProvider)
@@ -78,7 +78,7 @@ func RunServer() error {
 	// Configure controllers.
 	authController := authapi.NewImplementation(authService, logger)
 	userController := userapi.NewImplementation(userService, logger)
-	profileController := profileapi.NewImplementation(profileStore, authMiddleware, logger)
+	portfolioController := portfolioapi.NewImplementation(portfolioStore, authMiddleware, logger)
 
 	// Start HTTP servers.
 
@@ -86,7 +86,7 @@ func RunServer() error {
 
 	authController.Register(mux)
 	userController.Register(mux)
-	profileController.Register(mux)
+	portfolioController.Register(mux)
 
 	server := http.Server{
 		Addr:    config.Server.Address,

@@ -1,4 +1,4 @@
-package profile
+package portfolio
 
 import (
 	"github.com/go-chi/chi/v5"
@@ -19,7 +19,7 @@ func NewImplementation(service Service, auth middleware.Middleware, logger *zap.
 	return &Implementation{
 		service: service,
 		auth:    auth,
-		logger:  logger.Named("api.v1.profile"),
+		logger:  logger.Named("api.v1.portfolio"),
 	}
 }
 

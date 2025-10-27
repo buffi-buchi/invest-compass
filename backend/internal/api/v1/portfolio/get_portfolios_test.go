@@ -1,4 +1,4 @@
-package profile
+package portfolio
 
 import (
 	_ "embed"
@@ -17,11 +17,11 @@ import (
 )
 
 var (
-	//go:embed testdata/get_profiles_response.json
-	getProfilesResponse []byte
+	//go:embed testdata/get_portfolios_response.json
+	getPortfoliosResponse []byte
 )
 
-func TestImplementation_GetProfiles(t *testing.T) {
+func TestImplementation_GetPortfolios(t *testing.T) {
 	t.Parallel()
 
 	userID := uuid.MustParse("463d4cc6-023a-4d54-9da5-e6445367bf21")
@@ -39,7 +39,7 @@ func TestImplementation_GetProfiles(t *testing.T) {
 			handler: func(mc *minimock.Controller) *Implementation {
 				service := NewServiceMock(mc)
 
-				profiles := []model.Profile{
+				portfolios := []model.Portfolio{
 					{
 						ID:         uuid.MustParse("463d4cc6-023a-4d54-9da5-e6445367bf21"),
 						UserID:     userID,
@@ -50,18 +50,18 @@ func TestImplementation_GetProfiles(t *testing.T) {
 
 				service.GeByUserIDMock.
 					When(minimock.AnyContext, userID, 10, 0).
-					Then(profiles, nil)
+					Then(portfolios, nil)
 
 				return &Implementation{
 					service: service,
 					logger:  zap.NewNop(),
 				}
 			},
-			wantResp: getProfilesResponse,
+			wantResp: getPortfoliosResponse,
 			wantCode: http.StatusOK,
 		},
 		{
-			name: "get profiles error",
+			name: "get portfolios error",
 			handler: func(mc *minimock.Controller) *Implementation {
 				service := NewServiceMock(mc)
 
@@ -74,7 +74,7 @@ func TestImplementation_GetProfiles(t *testing.T) {
 					logger:  zap.NewNop(),
 				}
 			},
-			wantResp: json.RawMessage(`{ "message": "Get profiles by user ID" }`),
+			wantResp: json.RawMessage(`{ "message": "Get portfolios by user ID" }`),
 			wantCode: http.StatusInternalServerError,
 		},
 	}
@@ -92,7 +92,7 @@ func TestImplementation_GetProfiles(t *testing.T) {
 						UserID: userID,
 					})
 					r = r.WithContext(ctx)
-					handler.GetProfiles(w, r)
+					handler.GetPortfolios(w, r)
 				},
 				ReqBody: tc.req,
 			}

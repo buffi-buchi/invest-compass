@@ -1,7 +1,7 @@
 -- +goose Up
 -- +goose StatementBegin
 
-CREATE TABLE IF NOT EXISTS profiles
+CREATE TABLE IF NOT EXISTS portfolios
 (
     id          UUID        NOT NULL,
     user_id     UUID        NOT NULL,
@@ -17,6 +17,6 @@ CREATE TABLE IF NOT EXISTS profiles
 -- +goose Down
 -- +goose StatementBegin
 
-DROP TABLE IF EXISTS profiles;
+DROP TABLE IF EXISTS portfolios;
 
 -- +goose StatementEnd
