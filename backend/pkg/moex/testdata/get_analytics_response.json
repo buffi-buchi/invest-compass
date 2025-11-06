@@ -1,0 +1,46 @@
+[
+  {
+    "charsetinfo": {
+      "name": "utf-8"
+    }
+  },
+  {
+    "analytics": [
+      {
+        "indexid": "IMOEX",
+        "tradedate": "2025-11-06",
+        "ticker": "AFLT",
+        "shortnames": "Аэрофлот",
+        "secids": "AFLT",
+        "weight": 0.69,
+        "tradingsession": 3,
+        "trade_session_date": "2025-11-06"
+      },
+      {
+        "indexid": "IMOEX",
+        "tradedate": "2025-11-06",
+        "ticker": "GAZP",
+        "shortnames": "ГАЗПРОМ ао",
+        "secids": "GAZP",
+        "weight": 11.19,
+        "tradingsession": 3,
+        "trade_session_date": "2025-11-06"
+      }
+    ],
+    "analytics.cursor": [
+      {
+        "INDEX": 0,
+        "TOTAL": 2,
+        "PAGESIZE": 20,
+        "PREV_DATE": "2025-11-05",
+        "NEXT_DATE": null
+      }
+    ],
+    "analytics.dates": [
+      {
+        "from": "2001-01-03",
+        "till": "2025-11-06"
+      }
+    ]
+  }
+]

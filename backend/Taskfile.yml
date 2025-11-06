@@ -24,7 +24,7 @@ tasks:
   test:
     cmds:
       - go test -tags integration -coverprofile covertmp.out ./...
-      - grep -v 'server\.gen\.go' covertmp.out > cover.out
+      - grep -E -v '(server\.gen\.go|httptest)' covertmp.out > cover.out
       - go tool cover -func cover.out
   bin-deps:
     cmds:

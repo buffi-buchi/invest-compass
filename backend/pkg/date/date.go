@@ -11,6 +11,14 @@ type Date struct {
 	day   int
 }
 
+func NewDate(year int, month time.Month, day int) Date {
+	return Date{
+		year:  year,
+		month: month,
+		day:   day,
+	}
+}
+
 func (d *Date) MarshalJSON() ([]byte, error) {
 	t := time.Date(d.year, d.month, d.day, 0, 0, 0, 0, time.UTC)
 	data := make([]byte, 0, len(time.DateOnly)+len(`""`))

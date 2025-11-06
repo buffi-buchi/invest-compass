@@ -40,7 +40,7 @@ func (c *Client) getJSON(req *http.Request, result any) error {
 	var parts []json.RawMessage
 
 	if err = json.NewDecoder(resp.Body).Decode(&parts); err != nil {
-		return fmt.Errorf("decode get index response: %w", err)
+		return fmt.Errorf("decode response: %w", err)
 	}
 
 	// TODO: Validate version header.
@@ -50,7 +50,7 @@ func (c *Client) getJSON(req *http.Request, result any) error {
 	}
 
 	if err = json.Unmarshal(parts[1], result); err != nil {
-		return fmt.Errorf("decode get index response: %w", err)
+		return fmt.Errorf("decode response: %w", err)
 	}
 
 	return nil

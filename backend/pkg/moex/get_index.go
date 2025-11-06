@@ -2,6 +2,7 @@ package moex
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"net/http"
 
@@ -46,6 +47,10 @@ func (c *Client) GetIndex(ctx context.Context, ticker string) ([]IndexStock, err
 		}
 
 		stocks = append(stocks, resp.Stocks...)
+
+		if len(resp.Cursors) != 1 {
+			return nil, errors.New("unexpected analytics.cursor format")
+		}
 
 		// TODO: Validate cursor.
 		if resp.Cursors[0].Index+resp.Cursors[0].PageSize > resp.Cursors[0].Total {
