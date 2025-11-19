@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: Portfolio API
-  description: Portfolio API describes handlers to manage user's portfolios
+  description: Portfolio API describes handlers to manage portfolios
   version: 0.1.0
 
 servers:
@@ -9,18 +9,29 @@ servers:
     description: Server for local development
 
 paths:
-  /v1/portfolios:
+  /v1/portfolios/{portfolio_id}:
     get:
-      operationId: GetPortfolios
+      operationId: GetPortfolioById
       tags:
         - portfolios
-      security:
-        - BearerAuth: [ ]
+      summary: Get portfolio by ID
+      description: Returns detailed information about a specific portfolio
+      parameters:
+        - name: portfolio_id
+          in: path
+          required: true
+          description: Unique identifier of the portfolio
+          schema:
+            type: string
+            format: uuid
+            example: "550e8400-e29b-41d4-a716-446655440000"
       responses:
         '200':
-          $ref: '#/components/responses/GetPortfoliosResponse'
-        'default':
-          $ref: '../common/error.openapi.yaml#/components/responses/ErrorResponse'
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Portfolio'
 
 components:
   schemas:
@@ -30,37 +41,28 @@ components:
         - id
         - user_id
         - name
-        - create_time
+        - created_at
       properties:
         id:
           type: string
           format: uuid
+          example: "550e8400-e29b-41d4-a716-446655440000"
+          description: Unique identifier for the portfolio
         user_id:
           type: string
           format: uuid
+          example: "550e8400-e29b-41d4-a716-446655440001"
+          description: ID of the user who owns this portfolio
         name:
           type: string
-        create_time:
+          maxLength: 100
+          example: "My Investment Portfolio"
+          description: Name of the portfolio
+        created_at:
           type: string
           format: date-time
-
-  securitySchemes:
-    BearerAuth:
-      type: http
-      scheme: bearer
-      bearerFormat: JWT
-
-  responses:
-    GetPortfoliosResponse:
-      description: ''
-      content:
-        application/json:
-          schema:
-            type: object
-            required:
-              - portfolios
-            properties:
-              portfolios:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Portfolio'
+          example: "2023-10-05T14:30:00Z"
+          description: Creation timestamp of the portfolio
+        meta:
+          type: object
+          nullable: true
