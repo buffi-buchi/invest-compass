@@ -1,0 +1,59 @@
+openapi: 3.0.0
+info:
+  title: Index API
+  description: Index API describes handlers to manage indexes
+  version: 0.1.0
+
+servers:
+  - url: http://localhost:8080/api
+    description: Server for local development
+
+paths:
+  /v1/indexes:
+    get:
+      operationId: GetIndexes
+      tags:
+        - indexes
+      summary: Get list of financial indexes
+      description: Returns an array of all available market indexes
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Index'
+
+components:
+  schemas:
+    Index:
+      type: object
+      required:
+        - id
+        - name
+        - isin
+        - ticker
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: "23e4567-e89b-12d3-a456-426655440000"
+          description: Unique identifier for the index
+        name:
+          type: string
+          maxLength: 20
+          example: "S&P 500 Index"
+          description: Human-readable name of the index
+        isin:
+          type: string
+          minLength: 12
+          maxLength: 12
+          example: "US78462F1030"
+          description: International Securities Identification Number
+        ticker:
+          type: string
+          maxLength: 10
+          example: "SPX"
+          description: Trading symbol of the index
