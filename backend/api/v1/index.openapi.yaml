@@ -31,27 +31,21 @@ components:
     Index:
       type: object
       required:
-        - id
-        - name
         - isin
+        - name
         - ticker
       properties:
-        id:
-          type: string
-          format: uuid
-          example: "23e4567-e89b-12d3-a456-426655440000"
-          description: Unique identifier for the index
-        name:
-          type: string
-          maxLength: 20
-          example: "S&P 500 Index"
-          description: Human-readable name of the index
         isin:
           type: string
           minLength: 12
           maxLength: 12
           example: "US78462F1030"
-          description: International Securities Identification Number
+          description: International Securities Identification Number (unique identifier)
+        name:
+          type: string
+          maxLength: 20
+          example: "S&P 500 Index"
+          description: Human-readable name of the index
         ticker:
           type: string
           maxLength: 10
