@@ -32,8 +32,10 @@ func TestClient_GetIndexes(t *testing.T) {
 			name: "success",
 			server: func(t *testing.T) *httptest.Server {
 				const url = "/iss/statistics/engines/stock/markets/index/analytics?iss.json=extended&iss.meta=off&iss.version=on"
+
 				return httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 					assert.Equal(t, url, r.URL.String())
+
 					w.WriteHeader(http.StatusOK)
 					w.Write(getAnalyticsResponse)
 				}))

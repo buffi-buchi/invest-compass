@@ -65,7 +65,7 @@ func (r getIndexSecuritiesRequest) buildRequest(ctx context.Context, baseURL str
 }
 
 type getIndexSecuritiesResponse struct {
-	Securities []IndexSecurity
+	Securities []IndexSecurity            `json:"analytics"`
 	Cursors    []getIndexSecuritiesCursor `json:"analytics.cursor"`
 	Dates      []getIndexSecuritiesDate   `json:"analytics.dates"`
 }
