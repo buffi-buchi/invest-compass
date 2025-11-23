@@ -1,0 +1,110 @@
+[
+  {
+    "charsetinfo": {
+      "name": "utf-8"
+    }
+  },
+  {
+    "securities": [
+      {
+        "SECID": "GAZP",
+        "BOARDID": "TQBR",
+        "SHORTNAME": "ГАЗПРОМ ао",
+        "PREVPRICE": 124,
+        "LOTSIZE": 10,
+        "FACEVALUE": 5,
+        "STATUS": "A",
+        "BOARDNAME": "Т+: Акции и ДР - безадрес.",
+        "DECIMALS": 2,
+        "SECNAME": "\"Газпром\" (ПАО) ао",
+        "REMARKS": null,
+        "MARKETCODE": "FNDT",
+        "INSTRID": "EQIN",
+        "SECTORID": null,
+        "MINSTEP": 0.01,
+        "PREVWAPRICE": 124.4,
+        "FACEUNIT": "SUR",
+        "PREVDATE": "2025-11-19",
+        "ISSUESIZE": 23673512900,
+        "ISIN": "RU0007661625",
+        "LATNAME": "Gazprom",
+        "REGNUMBER": "1-02-00028-A",
+        "PREVLEGALCLOSEPRICE": 125.77,
+        "CURRENCYID": "SUR",
+        "SECTYPE": "1",
+        "LISTLEVEL": 1,
+        "SETTLEDATE": "2025-11-21"
+      }
+    ],
+    "marketdata": [
+      {
+        "SECID": "GAZP",
+        "BOARDID": "TQBR",
+        "BID": null,
+        "BIDDEPTH": null,
+        "OFFER": null,
+        "OFFERDEPTH": null,
+        "SPREAD": 0,
+        "BIDDEPTHT": 0,
+        "OFFERDEPTHT": 0,
+        "OPEN": 124.23,
+        "LOW": 122.64,
+        "HIGH": 129.29,
+        "LAST": 128.11,
+        "LASTCHANGE": 0.02,
+        "LASTCHANGEPRCNT": 0.02,
+        "QTY": 5,
+        "VALUE": 6405.50,
+        "VALUE_USD": 79.13,
+        "WAPRICE": 125.85,
+        "LASTCNGTOLASTWAPRICE": 3.71,
+        "WAPTOPREVWAPRICEPRCNT": 1.17,
+        "WAPTOPREVWAPRICE": 1.45,
+        "CLOSEPRICE": null,
+        "MARKETPRICETODAY": 124.05,
+        "MARKETPRICE": 124.43,
+        "LASTTOPREVPRICE": 3.31,
+        "NUMTRADES": 151642,
+        "VOLTODAY": 129960600,
+        "VALTODAY": 16356586149,
+        "VALTODAY_USD": 202070870,
+        "ETFSETTLEPRICE": null,
+        "TRADINGSTATUS": "N",
+        "UPDATETIME": "23:50:23",
+        "LASTBID": null,
+        "LASTOFFER": null,
+        "LCLOSEPRICE": 123.65,
+        "LCURRENTPRICE": 128.16,
+        "MARKETPRICE2": 124.05,
+        "NUMBIDS": null,
+        "NUMOFFERS": null,
+        "CHANGE": 4.11,
+        "TIME": "23:49:58",
+        "HIGHBID": null,
+        "LOWOFFER": null,
+        "PRICEMINUSPREVWAPRICE": 3.71,
+        "OPENPERIODPRICE": 124.23,
+        "SEQNUM": 20251121000501,
+        "SYSTIME": "2025-11-20 23:50:45",
+        "CLOSINGAUCTIONPRICE": 123.65,
+        "CLOSINGAUCTIONVOLUME": 14010,
+        "ISSUECAPITALIZATION": 3032813737619,
+        "ISSUECAPITALIZATION_UPDATETIME": "23:49:58",
+        "ETFSETTLECURRENCY": null,
+        "VALTODAY_RUR": 16356586149,
+        "TRADINGSESSION": null,
+        "TRENDISSUECAPITALIZATION": 97298138019
+      }
+    ],
+    "dataversion": [
+      {
+        "data_version": 8645,
+        "seqnum": 20251120235959,
+        "trade_date": "2025-11-20",
+        "trade_session_date": "2025-11-20"
+      }
+    ],
+    "marketdata_yields": [
+    ]
+  }
+]

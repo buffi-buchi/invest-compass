@@ -6,24 +6,27 @@ import (
 )
 
 type Date struct {
-	year  int
-	month time.Month
-	day   int
+	time time.Time
 }
 
 func NewDate(year int, month time.Month, day int) Date {
 	return Date{
-		year:  year,
-		month: month,
-		day:   day,
+		time: time.Date(year, month, day, 0, 0, 0, 0, time.UTC),
 	}
 }
 
-func (d *Date) MarshalJSON() ([]byte, error) {
-	t := time.Date(d.year, d.month, d.day, 0, 0, 0, 0, time.UTC)
+func (d Date) Time() time.Time {
+	return d.time
+}
+
+func (d Date) String() string {
+	return d.time.Format(time.DateOnly)
+}
+
+func (d Date) MarshalJSON() ([]byte, error) {
 	data := make([]byte, 0, len(time.DateOnly)+len(`""`))
 	data = append(data, '"')
-	data = t.AppendFormat(data, time.DateOnly)
+	data = d.time.AppendFormat(data, time.DateOnly)
 	data = append(data, '"')
 	return data, nil
 }
@@ -48,15 +51,7 @@ func (d *Date) UnmarshalJSON(data []byte) error {
 		return err
 	}
 
-	d.year, d.month, d.day = t.Date()
+	d.time = t
 
 	return nil
-}
-
-func (d *Date) Time() time.Time {
-	return time.Date(d.year, d.month, d.day, 0, 0, 0, 0, time.UTC)
-}
-
-func (d *Date) String() string {
-	return d.Time().Format(time.DateOnly)
 }
