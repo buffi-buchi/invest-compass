@@ -2,11 +2,16 @@ package moex
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"net/http"
 	"net/url"
 	"strconv"
 	"time"
+)
+
+var (
+	ErrNotFound = errors.New("not found")
 )
 
 // Client is an HTTP client for Moscow Exchange (MOEX).
