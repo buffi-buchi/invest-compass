@@ -1,0 +1,11 @@
+config:
+  server:
+    address: localhost:8000
+  debug_server:
+    address: localhost:8004
+  postgres:
+    connection_string: ''
+
+apps:
+  - name: invest-compass-server
+    image: invest-compass-server:latest # TODO: Specify image name and tag. As tag we can use commit hash.
