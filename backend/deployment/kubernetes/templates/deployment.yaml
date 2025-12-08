@@ -1,0 +1,70 @@
+{{- range $app := .Values.apps }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ $app.name }}
+  labels:
+    app.kubernetes.io/name: {{ $app.name }}
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ $app.name }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ $app.name }}
+    spec:
+      containers:
+        - name: {{ $app.name }}
+          image: {{ $app.image }}
+          # If an image does not exist local, then raise error.
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8080
+          env:
+            - name: POSTGRES_DB
+              valueFrom:
+                secretKeyRef:
+                  name: app-secrets
+                  key: db_name
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: app-secrets
+                  key: db_username
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: app-secrets
+                  key: db_password
+          volumeMounts:
+            - name: config-volume
+              mountPath: /config
+              readOnly: true
+          resources:
+            requests:
+              memory: 64Mi
+              cpu: 100m
+            limits:
+              memory: 256Mi
+              cpu: 500m
+          readinessProbe:
+            # TODO: Указать порт debug.
+            httpGet:
+              path: /ready
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          livenessProbe:
+            # TODO: Указать порт debug.
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 30
+            periodSeconds: 10
+      volumes:
+        # TODO: Тут нужно ли название сделать менее повторяющимся?
+        - name: config-volume
+          configMap:
+            name: {{ $.Release.Name }}-config
+{{- end }}

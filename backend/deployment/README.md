@@ -12,3 +12,9 @@ brew install k3d
 brew install kubectl
 brew install helm
 ```
+
+## Test
+
+```shell
+helm template invest-compass . --debug
+```

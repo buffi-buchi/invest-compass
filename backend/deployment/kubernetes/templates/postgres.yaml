@@ -3,6 +3,8 @@ kind: Deployment
 metadata:
   name: postgres
 spec:
+  # TODO: Пока не понимаю зачем нужны все эти metadata и selector.
+  # Стоит ли тут использовать одинаковые ключи (например, app.kubernetes.io/name) или нет?
   selector:
     matchLabels:
       app: postgres
@@ -15,6 +17,8 @@ spec:
         - name: postgres
           image: postgres:17-alpine3.22
           imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 5432
           env:
             - name: POSTGRES_DB
               valueFrom:
