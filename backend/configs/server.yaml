@@ -1,6 +1,2 @@
-server:
-  address: localhost:8000
-debug_server:
-  address: localhost:8004
-postgres:
-  connection_string: host=localhost port=5432 dbname=postgres user=postgres password=postgres sslmode=disable
+port: 13010
+debugServer: 13014

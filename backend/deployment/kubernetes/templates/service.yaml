@@ -1,16 +1,20 @@
-{{- range $app := .Values.apps }}
+{{- range $name, $app := .Values.apps }}
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ $app.name }}
+  name: {{ $name }}-service
+  namespace: {{ tpl $.Values.global.namespace $ }}
   labels:
-    app.kubernetes.io/name: {{ $app.name }}
+    app.kubernetes.io/name: {{ $name }}
 spec:
   selector:
-    app.kubernetes.io/name: {{ $app.name }}
+    app.kubernetes.io/name: {{ $name }}
   type: LoadBalancer
   ports:
     - protocol: TCP
-      port: 8080
-      targetPort: 8080
+      port: 13010
+      targetPort: {{ $app.port }}
+    - protocol: TCP
+      port: 13014
+      targetPort: {{ $app.debugPort }}
 {{- end }}
