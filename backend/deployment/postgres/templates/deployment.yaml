@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres
+  namespace: {{ tpl .Values.namespace . }}
+  labels:
+    environment: {{ .Values.global.env }}
+    app.kubernetes.io/name: postgres
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: postgres
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: postgres
+    spec:
+      containers:
+        - name: postgres
+          image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - containerPort: 5432
+              protocol: TCP
+          env:
+            - name: POSTGRES_DB
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: dbName
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: dbUser
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: dbPassword
+          volumeMounts:
+            - name: postgres-data
+              mountPath: /var/lib/postgresql
+          {{- with .Values.resources }}
+          resources:
+            {{ toYaml . | nindent 12 }}
+          {{- end }}
+      volumes:
+        - name: postgres-data
+# TODO: Configure volume.
