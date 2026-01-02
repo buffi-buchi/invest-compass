@@ -1,23 +1,21 @@
 global:
   env: local
 
-namespace: postgres-{{ .Values.global.env }}
-
-image:
-  repository: postgres
-  tag: 18-alpine3.22
-  pullPolicy: IfNotPresent
+nameSuffix: master
 
 secret:
   dbName: ''
   dbUser: ''
   dbPassword: ''
 
-service:
-  type: ClusterIP
-  ports:
-    - port: 5432
-      targetPort: 5432
+image:
+  repository: postgres
+  tag: 18-alpine3.22
+  pullPolicy: IfNotPresent
+
+ports:
+  - containerPort: 5432
+    protocol: TCP
 
 resources:
   requests:
@@ -26,3 +24,9 @@ resources:
   limits:
     memory: 256Mi
     cpu: 500m
+
+service:
+  type: ClusterIP
+  ports:
+    - port: 5432
+      targetPort: 5432

@@ -1,0 +1,32 @@
+global:
+  env: local
+
+nameSuffix: server
+
+image:
+  repository: invest-compass-server
+  tag: 0.1.0
+  pullPolicy: IfNotPresent
+
+secret:
+  dbName: ''
+  dbUser: ''
+  dbPassword: ''
+
+service:
+  type: LoadBalancer
+  ports:
+    - port: 8080
+      targetPort: 8080
+      name: http
+    - port: 8084
+      targetPort: 8084
+      name: http-diag
+
+resources:
+  requests:
+    memory: 128Mi
+    cpu: 100m
+  limits:
+    memory: 256Mi
+    cpu: 500m

@@ -1,9 +1,0 @@
-{{- range $name, $app := .Values.apps }}
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: {{ $name }}-configmap
-  namespace: {{ tpl $.Values.global.namespace $ }}
-data:
-  config.yaml: {{ toYaml $app.config | quote }}
-{{- end }}
