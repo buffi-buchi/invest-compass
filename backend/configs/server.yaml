@@ -1,2 +1,2 @@
-port: 13010
-debugServer: 13014
+port: 8080
+debugServer: 8084

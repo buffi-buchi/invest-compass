@@ -3,24 +3,30 @@ global:
 
 nameSuffix: server
 
-image:
-  repository: invest-compass-server
-  tag: 0.1.0
-  pullPolicy: IfNotPresent
-
 secret:
   dbName: ''
   dbUser: ''
   dbPassword: ''
 
+image:
+  repository: invest-compass-server
+  tag: 0.1.0
+  pullPolicy: IfNotPresent
+
+ports:
+  - containerPort: 8080
+    protocol: TCP
+    name: http
+  - containerPort: 8084
+    protocol: TCP
+    name: http-diag
+
 service:
   type: LoadBalancer
   ports:
     - port: 8080
-      targetPort: 8080
       name: http
     - port: 8084
-      targetPort: 8084
       name: http-diag
 
 resources:

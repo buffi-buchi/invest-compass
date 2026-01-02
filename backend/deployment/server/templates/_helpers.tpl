@@ -13,11 +13,14 @@ Create a default fully qualified app name.
 {{- end -}}
 
 {{/*
-TODO: Write comment.
+* TODO: Write comment.
 */}}
 {{- define "app.global.env" -}}
 {{- if not .Values.global.env }}
 {{- fail "'global.env' parameter is required but not defined!" }}
+{{- end }}
+{{- if not (contains .Values.global.env .Release.Namespace) }}
+{{- fail "the namespace must contain 'global.env'" }}
 {{- end }}
 {{- .Values.global.env }}
 {{- end -}}

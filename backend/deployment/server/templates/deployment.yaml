@@ -37,15 +37,10 @@ spec:
                 secretKeyRef:
                   name: {{ include "app.name" . }}-secret
                   key: dbPassword
-          volumeMounts:
-            - name: {{ include "app.name" . }}-data
-              mountPath: /var/lib/postgresql
           {{- with .Values.resources }}
           resources:
             {{- toYaml . | nindent 12 }}
           {{- end }}
-      {{/*
-      * TODO: Configure volumes.
-      */}}
-      volumes:
-        - name: {{ include "app.name" . }}-data
+          {{/*
+          * TODO: Configure readiness and liveness probes.
+          */}}
