@@ -34,7 +34,7 @@ func RunServer() error {
 	defer logger.Sync()
 
 	// Read configuration.
-	const envVarConfigPath = "SERVER_CONFIG_PATH"
+	const envVarConfigPath = "CONFIG_PATH"
 
 	configPath := os.Getenv(envVarConfigPath)
 	if configPath == "" {
@@ -49,7 +49,7 @@ func RunServer() error {
 	}
 
 	// Configure database connection.
-	dbConfig, err := pgxpool.ParseConfig(config.Postgres.ConnectionString)
+	dbConfig, err := pgxpool.ParseConfig(config.Postgres.GetConnectionString())
 	if err != nil {
 		logger.Error("Parse database config", zap.Error(err))
 		return fmt.Errorf("parse database config: %w", err)
@@ -89,14 +89,14 @@ func RunServer() error {
 	portfolioController.Register(mux)
 
 	server := http.Server{
-		Addr:    config.Server.Address,
+		Addr:    ":" + config.Server.Port,
 		Handler: mux,
 	}
 
 	mux = chi.NewMux()
 
 	debugServer := http.Server{
-		Addr:    config.DebugServer.Address,
+		Addr:    ":" + config.DebugServer.Port,
 		Handler: mux,
 	}
 

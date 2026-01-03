@@ -1,2 +1,10 @@
-port: 8080
-debugServer: 8084
+server:
+  port: 8080
+debugServer:
+  port: 8084
+postgres:
+  db: invest-compass
+  user: invest-compass-user
+  password: ""
+  host: 127.0.0.1
+  port: 5432
