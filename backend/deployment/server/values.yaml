@@ -3,6 +3,18 @@ global:
 
 nameSuffix: server
 
+config:
+  server:
+    port: 8080
+  debugServer:
+    port: 8084
+  postgres:
+    db: ""
+    user: ""
+    password: ""
+    host: postgres-service.postgres-local.svc.cluster.local
+    port: 5432
+
 secret:
   dbName: ''
   dbUser: ''
@@ -36,3 +48,8 @@ resources:
   limits:
     memory: 256Mi
     cpu: 500m
+
+configMap:
+  data:
+    config.yaml: |-
+      {{ toYaml .Values.config }}
