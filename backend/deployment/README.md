@@ -18,6 +18,7 @@ k3d cluster create --config backend/deployment/cluster/k3d-config.yaml
 # Install custom traefik
 kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.2.1/standard-install.yaml
 kubectl apply -f backend/deployment/cluster/traefik-config.yaml
+kubectl apply -f backend/deployment/cluster/gateway.yaml
 
 # To access the Traefik dashboard, use port-forwarding:
 kubectl port-forward -n kube-system service/traefik 9001:8080
