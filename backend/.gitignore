@@ -1,4 +1,5 @@
 bin
 vendor
+charts
 
 cover*.out

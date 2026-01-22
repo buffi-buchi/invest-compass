@@ -36,9 +36,9 @@ ports:
 service:
   type: LoadBalancer
   ports:
-    - port: 8080
+    - port: 80
       name: http
-    - port: 8084
+    - port: 84
       name: http-diag
 
 resources:
