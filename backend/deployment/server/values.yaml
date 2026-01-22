@@ -20,10 +20,24 @@ secret:
   dbUser: ''
   dbPassword: ''
 
+replicaCount: 1
+
 image:
   repository: invest-compass-server
   tag: 0.1.0
   pullPolicy: IfNotPresent
+
+probes:
+  liveness:
+    path: /livez
+    port: http-diag
+    initialDelaySeconds: 5
+    periodSeconds: 10
+  readiness:
+    path: /readyz
+    port: http-diag
+    initialDelaySeconds: 5
+    periodSeconds: 10
 
 ports:
   - containerPort: 8080
@@ -36,10 +50,8 @@ ports:
 service:
   type: LoadBalancer
   ports:
-    - port: 80
-      name: http
-    - port: 84
-      name: http-diag
+    - port: 8080
+      targetPort: http
 
 resources:
   requests:

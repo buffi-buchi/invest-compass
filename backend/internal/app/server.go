@@ -94,6 +94,16 @@ func RunServer() error {
 	}
 
 	mux = chi.NewMux()
+	mux.Get("/livez", func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+	})
+	mux.Get("/readyz", func(w http.ResponseWriter, r *http.Request) {
+		if err := pool.Ping(r.Context()); err != nil {
+			w.WriteHeader(http.StatusServiceUnavailable)
+			return
+		}
+		w.WriteHeader(http.StatusOK)
+	})
 
 	debugServer := http.Server{
 		Addr:    ":" + config.DebugServer.Port,

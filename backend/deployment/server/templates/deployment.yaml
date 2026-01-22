@@ -5,6 +5,7 @@ metadata:
   labels:
     {{- include "app.labels" . | nindent 4 }}
 spec:
+  replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
       {{- include "app.selectorLabels" . | nindent 6 }}
@@ -43,9 +44,20 @@ spec:
           resources:
             {{- toYaml . | nindent 12 }}
           {{- end }}
-          {{/*
-          * TODO: Configure readiness and liveness probes.
-          */}}
+          {{- with .Values.probes }}
+          livenessProbe:
+            httpGet:
+              path: {{ .liveness.path }}
+              port: {{ .liveness.port }}
+            initialDelaySeconds: {{ .liveness.initialDelaySeconds }}
+            periodSeconds: {{ .liveness.periodSeconds }}
+          readinessProbe:
+            httpGet:
+              path: {{ .readiness.path }}
+              port: {{ .readiness.port }}
+            initialDelaySeconds: {{ .readiness.initialDelaySeconds }}
+            periodSeconds: {{ .readiness.periodSeconds }}
+          {{- end }}
           volumeMounts:
             - name: {{ include "app.fullname" . }}-cm-volume
               mountPath: /tmp/configs
