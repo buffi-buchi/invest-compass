@@ -20,21 +20,10 @@ paths:
       summary: Get portfolio by ID
       description: Returns detailed information about a specific portfolio
       parameters:
-        - name: portfolio_id
-          in: path
-          required: true
-          description: Unique identifier of the portfolio
-          schema:
-            type: string
-            format: uuid
-            example: "550e8400-e29b-41d4-a716-446655440000"
+        - $ref: '#/components/parameters/PortfolioIdPath'
       responses:
         '200':
-          description: Successful operation
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Portfolio'
+          $ref: '#/components/responses/PortfolioResponse'
 
   /v1/protfolios/:
     get:
@@ -45,15 +34,33 @@ paths:
       description: Returns detailed information about a specific portfolio
       responses:
         '200':
-          description: Successful operation
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Portfolio'
+          $ref: '#/components/responses/PortfolioListResponse'
 
 components:
+  parameters:
+    PortfolioIdPath:
+      name: portfolio_id
+      in: path
+      required: true
+      description: Unique identifier of the portfolio
+      schema:
+        $ref: '#/components/schemas/Portfolio/properties/id'
+  responses:
+    PortfolioResponse:
+      description: Successful operation - single portfolio
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Portfolio'
+
+    PortfolioListResponse:
+      description: Successful operation - list of portfolios
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/Portfolio'
   schemas:
     Portfolio:
       type: object
