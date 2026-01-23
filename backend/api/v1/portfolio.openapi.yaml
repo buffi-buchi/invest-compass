@@ -41,7 +41,7 @@ components:
         - id
         - user_id
         - name
-        - created_at
+        - create_time
       properties:
         id:
           type: string
@@ -58,7 +58,7 @@ components:
           maxLength: 100
           example: "My Investment Portfolio"
           description: Name of the portfolio
-        created_at:
+        create_time:
           type: string
           format: date-time
           example: "2023-10-05T14:30:00Z"
