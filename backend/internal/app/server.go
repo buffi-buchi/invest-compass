@@ -44,20 +44,20 @@ func RunServer() error {
 
 	config, err := ReadConfig(configPath)
 	if err != nil {
-		logger.Error("Read config", zap.Error(err))
+		logger.Error("Failed to read config", zap.Error(err))
 		return fmt.Errorf("read config: %w", err)
 	}
 
 	// Configure database connection.
 	dbConfig, err := pgxpool.ParseConfig(config.Postgres.GetConnectionString())
 	if err != nil {
-		logger.Error("Parse database config", zap.Error(err))
+		logger.Error("Failed to parse database config", zap.Error(err))
 		return fmt.Errorf("parse database config: %w", err)
 	}
 
 	pool, err := pgxpool.NewWithConfig(context.TODO(), dbConfig)
 	if err != nil {
-		logger.Error("Create database pool", zap.Error(err))
+		logger.Error("Failed to create database pool", zap.Error(err))
 		return fmt.Errorf("create pool: %w", err)
 	}
 
@@ -117,7 +117,7 @@ func RunServer() error {
 		logger.Info("Starting server", zap.String("address", server.Addr))
 
 		if err := server.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
-			logger.Error("Start server", zap.Error(err))
+			logger.Error("Failed to start server", zap.Error(err))
 			cancel()
 		}
 	}()
@@ -126,7 +126,7 @@ func RunServer() error {
 		logger.Info("Starting debug server", zap.String("address", debugServer.Addr))
 
 		if err := debugServer.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
-			logger.Error("Start debug server", zap.Error(err))
+			logger.Error("Failed to start debug server", zap.Error(err))
 			cancel()
 		}
 	}()

@@ -40,7 +40,7 @@ func NewAuthMiddleware(jwtProvider JWTProvider) Middleware {
 				return
 			}
 
-			// TODO: Check that user exists.
+			// TODO: Check if the user exists.
 
 			ctx := model.WithAuthClaims(r.Context(), claims)
 			r = r.WithContext(ctx)

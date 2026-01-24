@@ -6,6 +6,10 @@ ports:
   - port: 9000:80
     nodeFilters:
       - loadbalancer
+volumes:
+  - volume: $MANIFESTS_DIR:/var/lib/rancher/k3s/server/manifests
+    nodeFilters:
+      - server:*
 options:
   k3s:
     extraArgs:

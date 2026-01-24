@@ -51,7 +51,7 @@ func (s *UserStore) Create(ctx context.Context, user model.User) (model.User, er
 
 	_, err = s.db.Exec(ctx, createUserQuery, user.ID, user.Email, user.Password, user.CreateTime)
 	if err != nil {
-		// TODO: Add function to check postgres err.
+		// TODO: Add a function to check postgres errors.
 		var pgErr *pgconn.PgError
 		if errors.As(err, &pgErr) {
 			if pgErr.Code == "23505" {
