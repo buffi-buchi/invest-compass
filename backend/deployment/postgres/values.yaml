@@ -1,0 +1,38 @@
+replicaCount: 1
+
+image:
+  repository: postgres
+  pullPolicy: IfNotPresent
+  tag: 18-alpine3.22
+
+auth:
+  database: "postgres"
+  username: "postgres"
+  password: "password"
+
+service:
+  type: ClusterIP
+  port: 5432
+
+persistence:
+  storageClass: ""
+  accessModes:
+    - ReadWriteOnce
+  size: 1Gi
+
+resources:
+  limits:
+    cpu: 100m
+    memory: 256Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+nodeSelector: { }
+
+tolerations: [ ]
+
+affinity: { }
+
+postgresqlConfig:
+  max_connections: "100"
