@@ -10,25 +10,30 @@ import (
 	"time"
 )
 
+var (
+	ErrNotFound = errors.New("not found")
+)
+
+// Client is an HTTP client for Moscow Exchange (MOEX).
 type Client struct {
-	baseURL string
 	client  *http.Client
+	baseURL string
 }
 
 // NewClient returns a newly initialized Client for Moscow Exchange (MOEX).
 func NewClient(baseURL string) *Client {
 	return &Client{
-		baseURL: baseURL,
 		client: &http.Client{
-			Timeout: time.Second * 5,
+			Timeout: 5 * time.Second,
 		},
+		baseURL: baseURL,
 	}
 }
 
-func (c *Client) getJSON(req *http.Request, result any) error {
+func (c *Client) doRequest(req *http.Request, result any) error {
 	resp, err := c.client.Do(req)
 	if err != nil {
-		return fmt.Errorf("execute get index request: %w", err)
+		return fmt.Errorf("do request: %w", err)
 	}
 
 	defer resp.Body.Close()
@@ -37,16 +42,18 @@ func (c *Client) getJSON(req *http.Request, result any) error {
 		return fmt.Errorf("unexpected status code: %d", resp.StatusCode)
 	}
 
+	// Response is always a JSON array at the top level with two elements when the parameter
+	// iss.json=extended is set.
+	// First, parse the response as a slice of JSON objects and validate the length.
+	// Second, parse the second element of the slice as the result.
 	var parts []json.RawMessage
 
 	if err = json.NewDecoder(resp.Body).Decode(&parts); err != nil {
 		return fmt.Errorf("decode response: %w", err)
 	}
 
-	// TODO: Validate version header.
-
 	if len(parts) != 2 {
-		return errors.New("unexpected response format")
+		return fmt.Errorf("unexpected response format")
 	}
 
 	if err = json.Unmarshal(parts[1], result); err != nil {
@@ -56,46 +63,29 @@ func (c *Client) getJSON(req *http.Request, result any) error {
 	return nil
 }
 
-type baseQuery struct {
-	only               []string
-	extendedJsonFormat bool
-	disableMeta        bool
-	disableData        bool
-	version            bool
-	start              int64
-	limit              int64
+// baseRequestParams defines base request parameters.
+type baseRequestParams struct {
+	start int64
+	limit int64
 }
 
-func (q baseQuery) values() url.Values {
+// buildURLValues constructs base URL query parameters of request. Parameters
+// iss.json, iss.meta and iss.version are constant because they define response
+// format.
+func (p baseRequestParams) buildURLValues() url.Values {
 	values := make(url.Values)
 
-	for _, block := range q.only {
-		values.Add("iss.only", block)
+	if p.start > 0 {
+		values.Add("start", strconv.FormatInt(p.start, 10))
 	}
 
-	if q.extendedJsonFormat {
-		values.Add("iss.json", "extended")
+	if p.limit > 0 {
+		values.Add("limit", strconv.FormatInt(p.limit, 10))
 	}
 
-	if q.disableMeta {
-		values.Add("iss.meta", "off")
-	}
-
-	if q.disableData {
-		values.Add("iss.data", "off")
-	}
-
-	if q.version {
-		values.Add("iss.version", "on")
-	}
-
-	if q.start != 0 {
-		values.Add("start", strconv.FormatInt(q.start, 10))
-	}
-
-	if q.limit != 0 {
-		values.Add("limit", strconv.FormatInt(q.limit, 10))
-	}
+	values.Add("iss.json", "extended")
+	values.Add("iss.meta", "off")
+	values.Add("iss.version", "on")
 
 	return values
 }
