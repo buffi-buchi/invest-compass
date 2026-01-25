@@ -14,7 +14,6 @@ paths:
       operationId: GetIndexes
       tags:
         - indexes
-      summary: Get list of financial indexes
       description: Returns an array of all available market indexes
       responses:
         '200':
@@ -31,7 +30,6 @@ paths:
       operationId: GetIndexSecurities
       tags:
         - indexes
-      summary: Get securities in index with portfolio quantities
       description: Returns list of securities in the specified index with their quantities in user's portfolio
       parameters:
         - name: index_id

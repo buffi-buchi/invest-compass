@@ -17,7 +17,6 @@ paths:
       operationId: GetPortfolioById
       tags:
         - portfolios
-      summary: Get portfolio by ID
       description: Returns detailed information about a specific portfolio
       parameters:
         - $ref: '#/components/parameters/PortfolioIdPath'
@@ -30,7 +29,6 @@ paths:
       operationId: GetPortfolios
       tags:
         - portfolios
-      summary: Get portfolio by ID
       description: Returns detailed information about a specific portfolio
       responses:
         '200':
