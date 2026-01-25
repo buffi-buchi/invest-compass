@@ -24,6 +24,8 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Index'
+        'default':
+          $ref: '../common/error.openapi.yaml#/components/responses/ErrorResponse'
 components:
   schemas:
     Index:

@@ -21,7 +21,8 @@ paths:
       responses:
         '200':
           $ref: '#/components/responses/PortfolioListResponse'
-
+        'default':
+          $ref: '../common/error.openapi.yaml#/components/responses/ErrorResponse'
 components:
   responses:
     PortfolioListResponse:

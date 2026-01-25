@@ -23,7 +23,8 @@ paths:
       responses:
         '200':
           $ref: '#/components/responses/SecuritiesListResponse'
-
+        'default':
+          $ref: '../common/error.openapi.yaml#/components/responses/ErrorResponse'
 components:
   parameters:
     IndexIdQuery:
