@@ -19,6 +19,10 @@ GATEWAY_API_URL="https://github.com/kubernetes-sigs/gateway-api/releases/downloa
 echo "Downloading Gateway API CRDs..."
 curl -L "$GATEWAY_API_URL" -o "$MANIFESTS_DIR/00-gateway-crd.yaml"
 
-# 2. Create a k3d cluster
+# 2. Copy Traefik configuration
+echo "Copying Traefik configuration..."
+cp "$DEPLOYMENT_DIR/cluster/traefik-config.yaml" "$MANIFESTS_DIR/01-traefik-config.yaml"
+
+# 3. Create a k3d cluster
 echo "Creating k3d cluster..."
 k3d cluster create --config "$DEPLOYMENT_DIR/cluster/k3d-config.yaml"

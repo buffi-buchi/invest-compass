@@ -1,0 +1,31 @@
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
+metadata:
+  name: traefik
+  namespace: kube-system
+spec:
+  chart: traefik
+  repo: https://traefik.github.io/charts
+  targetNamespace: kube-system
+  valuesContent: |-
+    providers:
+      kubernetesCRD:
+        enabled: true
+      kubernetesIngress:
+        enabled: false
+      kubernetesGateway:
+        enabled: true
+    gateway:
+      listeners:
+        web:
+          namespacePolicy:
+            from: All
+    ingressRoute:
+      dashboard:
+        enabled: true
+        entryPoints:
+          - web
+    logs:
+      access:
+        enabled: true
+        addInternals: true
