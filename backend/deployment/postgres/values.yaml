@@ -28,11 +28,14 @@ resources:
     cpu: 100m
     memory: 128Mi
 
-nodeSelector: { }
-
-tolerations: [ ]
-
-affinity: { }
+# Readiness probe configuration
+readinessProbe:
+  enabled: true
+  initialDelaySeconds: 5
+  periodSeconds: 10
+  timeoutSeconds: 5
+  successThreshold: 1
+  failureThreshold: 6
 
 postgresqlConfig:
   max_connections: "100"
