@@ -12,45 +12,18 @@ security:
   - BearerAuth: [ ]
 
 paths:
-  /v1/portfolios/{portfolio_id}:
-    get:
-      operationId: GetPortfolioById
-      tags:
-        - portfolios
-      description: Returns detailed information about a specific portfolio
-      parameters:
-        - $ref: '#/components/parameters/PortfolioIdPath'
-      responses:
-        '200':
-          $ref: '#/components/responses/PortfolioResponse'
-
   /v1/protfolios/:
     get:
       operationId: GetPortfolios
       tags:
         - portfolios
-      description: Returns detailed information about a specific portfolio
+      description: Returns list of portfolios
       responses:
         '200':
           $ref: '#/components/responses/PortfolioListResponse'
 
 components:
-  parameters:
-    PortfolioIdPath:
-      name: portfolio_id
-      in: path
-      required: true
-      description: Unique identifier of the portfolio
-      schema:
-        $ref: '#/components/schemas/Portfolio/properties/id'
   responses:
-    PortfolioResponse:
-      description: Successful operation - single portfolio
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Portfolio'
-
     PortfolioListResponse:
       description: Successful operation - list of portfolios
       content:
