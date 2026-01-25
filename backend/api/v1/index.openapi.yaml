@@ -25,14 +25,14 @@ paths:
                 items:
                   $ref: '#/components/schemas/Index'
 
-  /v1/indexes/{index_id}/securities:
+  /v1/indexes/{isin}/securities:
     get:
       operationId: GetIndexSecurities
       tags:
         - indexes
       description: Returns list of securities in the specified index with their quantities in user's portfolio
       parameters:
-        - name: index_id
+        - name: isin
           in: path
           required: true
           description: ISIN identifier of the index
@@ -56,27 +56,13 @@ components:
     Index:
       type: object
       required:
-        - isin
-        - name
         - ticker
       properties:
-        isin:
-          type: string
-          minLength: 12
-          maxLength: 12
-          example: "US78462F1030"
-          description: International Securities Identification Number (unique identifier)
-        name:
-          type: string
-          maxLength: 30
-          example: "S&P 500 Index"
-          description: Human-readable name of the index
         ticker:
           type: string
           maxLength: 10
           example: "SPX"
           description: Trading symbol of the index
-
     IndexSecurity:
       type: object
       required:
@@ -100,7 +86,6 @@ components:
     Security:
       type: object
       required:
-        - isin
         - ticker
         - name
         - current_price
