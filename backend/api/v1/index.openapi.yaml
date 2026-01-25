@@ -24,33 +24,6 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Index'
-
-  /v1/indexes/{isin}/securities:
-    get:
-      operationId: GetIndexSecurities
-      tags:
-        - indexes
-      description: Returns list of securities in the specified index with their quantities in user's portfolio
-      parameters:
-        - name: isin
-          in: path
-          required: true
-          description: ISIN identifier of the index
-          schema:
-            type: string
-            minLength: 12
-            maxLength: 12
-            example: "US78462F1030"
-      responses:
-        '200':
-          description: Successful operation
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/IndexSecurity'
-
 components:
   schemas:
     Index:
@@ -63,52 +36,5 @@ components:
           maxLength: 10
           example: "SPX"
           description: Trading symbol of the index
-    IndexSecurity:
-      type: object
-      required:
-        - security
-        - weight
-        - quantity
-      properties:
-        security:
-          $ref: '#/components/schemas/Security'
-        weight:
-          type: number
-          format: float
-          example: 0.0255
-          description: Weight of security in the index
-        quantity:
-          type: number
-          format: float
-          example: 15.5
-          description: Quantity of security in user's portfolio
 
-    Security:
-      type: object
-      required:
-        - ticker
-        - name
-        - current_price
-      properties:
-        isin:
-          type: string
-          minLength: 12
-          maxLength: 12
-          example: "US0378331005"
-          description: International Securities Identification Number
-        ticker:
-          type: string
-          maxLength: 20
-          example: "AAPL"
-          description: Trading symbol of the security
-        name:
-          type: string
-          maxLength: 200
-          example: "Apple Inc."
-          description: Name of the security
-        current_price:
-          type: number
-          format: float
-          minimum: 0
-          example: 150.75
-          description: Current price of the security
+
