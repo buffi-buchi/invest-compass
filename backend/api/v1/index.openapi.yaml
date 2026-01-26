@@ -17,16 +17,24 @@ paths:
       description: Returns an array of all available market indexes
       responses:
         '200':
-          description: Successful operation
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Index'
+          $ref: '#/components/responses/IndexesListResponse'
         'default':
           $ref: '../common/error.openapi.yaml#/components/responses/ErrorResponse'
 components:
+  responses:
+    IndexesListResponse:
+      description: Successful operation
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              indexes:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Index'
+            required:
+              - indexes
   schemas:
     Index:
       type: object

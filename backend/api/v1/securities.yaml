@@ -41,9 +41,12 @@ components:
       content:
         application/json:
           schema:
-            type: array
-            items:
-              $ref: '#/components/schemas/Security'
+            type: object
+            properties:
+              securities:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Security'
   schemas:
     Security:
       type: object
