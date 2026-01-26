@@ -23,7 +23,7 @@ paths:
 components:
   responses:
     IndexesListResponse:
-      description: Successful operation
+      description: List of available indexes
       content:
         application/json:
           schema:
