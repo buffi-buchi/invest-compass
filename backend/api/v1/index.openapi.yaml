@@ -20,10 +20,11 @@ paths:
           $ref: '#/components/responses/IndexesListResponse'
         'default':
           $ref: '../common/error.openapi.yaml#/components/responses/ErrorResponse'
+
 components:
   responses:
     IndexesListResponse:
-      description: List of available indexes
+      description: Successful operation - list of available indexes
       content:
         application/json:
           schema:
