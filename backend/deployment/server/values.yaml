@@ -36,6 +36,12 @@ postgres:
   user: "invest-compass-user"
   password: "password"
 
+# Gateway API configuration
+gateway:
+  enabled: true
+  gatewayName: traefik-gateway
+  gatewayNamespace: kube-system
+
 resources:
   limits:
     cpu: 100m

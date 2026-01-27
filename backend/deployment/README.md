@@ -77,9 +77,10 @@ kubectl get pods -l app.kubernetes.io/name=server -n server
 
 ## 3. Accessing the Application
 
-The server application is exposed via a `LoadBalancer` service. Since we are using k3d, the ports are mapped to your localhost as defined in the `k3d-config.yaml`.
+The server application is exposed via a `LoadBalancer` service and a Gateway `HTTPRoute`. Since we are using k3d, the ports are mapped to your localhost as defined in the `k3d-config.yaml`.
 
-- **Main API**: [http://localhost:9000](http://localhost:9000) (mapped to cluster load balancer port 80)
+- **Main API (via Gateway)**: [http://localhost:9000](http://localhost:9000) (requests are proxied by Traefik through the `web` entrypoint)
+- **Main API (direct Service)**: [http://localhost:9000](http://localhost:9000) (mapped to cluster load balancer port 80)
 
 ### Health Checks
 - Readiness: `kubectl port-forward svc/server 8084:84 -n server` then `curl http://localhost:8084/readyz`
