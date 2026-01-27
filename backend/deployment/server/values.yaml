@@ -27,7 +27,7 @@ config:
       db: ""
       user: ""
       password: ""
-      host: "postgres-postgres" # Default to the service name of the postgres chart
+      host: "postgres-postgres.postgres.svc.cluster.local"
       port: "5432"
 
 # Postgres credentials should be provided via secret

@@ -6,4 +6,4 @@ metadata:
     {{- include "server.labels" . | nindent 4 }}
 data:
   {{ .Values.config.filename }}: |
-    {{ toYaml .Values.config.content | indent 4 }}
+{{ toYaml .Values.config.content | indent 4 }}
