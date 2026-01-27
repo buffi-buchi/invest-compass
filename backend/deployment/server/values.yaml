@@ -1,0 +1,59 @@
+replicaCount: 1
+
+image:
+  repository: invest-compass-server
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: ""
+
+ports:
+  http: 80
+  debug: 84
+
+service:
+  type: LoadBalancer
+  port: 80
+
+config:
+  path: "/app/configs"
+  filename: "server.yaml"
+  # Content of server.yaml
+  content:
+    server:
+      port: "80"
+    debugServer:
+      port: "84"
+    postgres:
+      db: ""
+      user: ""
+      password: ""
+      host: "postgres-postgres" # Default to the service name of the postgres chart
+      port: "5432"
+
+# Postgres credentials should be provided via secret
+postgres:
+  db: "invest-compass"
+  user: "invest-compass-user"
+  password: "password"
+
+resources:
+  limits:
+    cpu: 100m
+    memory: 256Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+livenessProbe:
+  httpGet:
+    path: /livez
+    port: debug
+  initialDelaySeconds: 15
+  periodSeconds: 20
+
+readinessProbe:
+  httpGet:
+    path: /readyz
+    port: debug
+  initialDelaySeconds: 5
+  periodSeconds: 10
