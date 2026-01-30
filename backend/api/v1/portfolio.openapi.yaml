@@ -71,6 +71,42 @@ components:
         meta:
           type: object
           nullable: true
+        securities:
+          type: array
+          items:
+            $ref: '#/components/schemas/IndexSecurity'
+          description: List of securities in the portfolio
+
+    IndexSecurity:
+      type: object
+      required:
+        - id
+        - indexId
+        - ticker
+        - shortName
+        - weight
+      properties:
+        id:
+          type: string
+          example: "SBER"
+          description: Security ID
+        indexId:
+          type: string
+          example: "IMOEX"
+          description: Index ID
+        ticker:
+          type: string
+          example: "SBER"
+          description: Ticker symbol
+        shortName:
+          type: string
+          example: "Сбербанк"
+          description: Short name of the security
+        weight:
+          type: number
+          format: double
+          example: 15.5
+          description: Weight of the security in the index
 
   securitySchemes:
     BearerAuth:
