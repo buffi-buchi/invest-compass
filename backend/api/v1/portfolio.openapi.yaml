@@ -20,13 +20,13 @@ paths:
       description: Returns list of portfolios
       responses:
         '200':
-          $ref: '#/components/responses/PortfolioListResponse'
+          $ref: '#/components/responses/GetPortfolioListResponse'
         'default':
           $ref: '../common/error.openapi.yaml#/components/responses/ErrorResponse'
 
 components:
   responses:
-    PortfolioListResponse:
+    GetPortfolioListResponse:
       description: Successful operation - list of portfolios
       content:
         application/json:
