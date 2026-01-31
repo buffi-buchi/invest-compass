@@ -12,7 +12,7 @@ security:
   - BearerAuth: [ ]
 
 paths:
-  /v1/protfolios/:
+  /v1/protfolios:
     get:
       operationId: GetPortfolios
       tags:
