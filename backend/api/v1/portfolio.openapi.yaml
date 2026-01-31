@@ -68,9 +68,6 @@ components:
           format: date-time
           example: "2023-10-05T14:30:00Z"
           description: Creation timestamp of the portfolio
-        meta:
-          type: object
-          nullable: true
         securities:
           type: array
           items:
