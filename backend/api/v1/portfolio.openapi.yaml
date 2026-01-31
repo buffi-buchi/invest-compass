@@ -104,6 +104,11 @@ components:
           format: double
           example: 15.5
           description: Weight of the security in the index
+        price:
+          type: number
+          format: double
+          example: 15.5
+          description: Price of the security
 
   securitySchemes:
     BearerAuth:
