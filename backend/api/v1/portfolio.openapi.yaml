@@ -1,28 +1,44 @@
 openapi: 3.0.0
 info:
   title: Portfolio API
-  description: Portfolio API describes handlers to manage user's portfolios
+  description: Portfolio API describes handlers to manage portfolios
   version: 0.1.0
 
 servers:
   - url: http://localhost:8080/api
     description: Server for local development
 
+security:
+  - BearerAuth: [ ]
+
 paths:
-  /v1/portfolios:
+  /v1/protfolios:
     get:
       operationId: GetPortfolios
       tags:
         - portfolios
-      security:
-        - BearerAuth: [ ]
+      description: Returns list of portfolios
       responses:
         '200':
-          $ref: '#/components/responses/GetPortfoliosResponse'
+          $ref: '#/components/responses/GetPortfolioListResponse'
         'default':
           $ref: '../common/error.openapi.yaml#/components/responses/ErrorResponse'
 
 components:
+  responses:
+    GetPortfolioListResponse:
+      description: Successful operation - list of portfolios
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              portfolios:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Portfolio'
+            required:
+              - portfolios
   schemas:
     Portfolio:
       type: object
@@ -35,32 +51,67 @@ components:
         id:
           type: string
           format: uuid
+          example: "550e8400-e29b-41d4-a716-446655440000"
+          description: Unique identifier for the portfolio
         user_id:
           type: string
           format: uuid
+          example: "550e8400-e29b-41d4-a716-446655440001"
+          description: ID of the user who owns this portfolio
         name:
           type: string
+          maxLength: 100
+          example: "My Investment Portfolio"
+          description: Name of the portfolio
         create_time:
           type: string
           format: date-time
+          example: "2023-10-05T14:30:00Z"
+          description: Creation timestamp of the portfolio
+        securities:
+          type: array
+          items:
+            $ref: '#/components/schemas/IndexSecurity'
+          description: List of securities in the portfolio
+
+    IndexSecurity:
+      type: object
+      required:
+        - id
+        - indexId
+        - ticker
+        - shortName
+        - weight
+      properties:
+        id:
+          type: string
+          example: "SBER"
+          description: Security ID
+        indexId:
+          type: string
+          example: "IMOEX"
+          description: Index ID
+        ticker:
+          type: string
+          example: "SBER"
+          description: Ticker symbol
+        shortName:
+          type: string
+          example: "Сбербанк"
+          description: Short name of the security
+        weight:
+          type: number
+          format: double
+          example: 15.5
+          description: Weight of the security in the index
+        price:
+          type: number
+          format: double
+          example: 15.5
+          description: Price of the security
 
   securitySchemes:
     BearerAuth:
       type: http
       scheme: bearer
       bearerFormat: JWT
-
-  responses:
-    GetPortfoliosResponse:
-      description: ''
-      content:
-        application/json:
-          schema:
-            type: object
-            required:
-              - portfolios
-            properties:
-              portfolios:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Portfolio'
