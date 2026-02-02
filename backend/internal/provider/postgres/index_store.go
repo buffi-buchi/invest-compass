@@ -1,0 +1,70 @@
+package postgres
+
+import (
+	"context"
+	"database/sql"
+	_ "embed"
+	"errors"
+	"fmt"
+	"time"
+
+	"github.com/google/uuid"
+	"github.com/jackc/pgx/v5/pgxpool"
+
+	"github.com/buffi-buchi/invest-compass/backend/internal/domain/model"
+)
+
+var (
+	//go:embed queries/create_index.sql
+	createIndexQuery string
+
+	//go:embed queries/get_index_by_code.sql
+	getIndexByCodeQuery string
+)
+
+type IndexStore struct {
+	db  *pgxpool.Pool
+	id  func() (uuid.UUID, error)
+	now func() time.Time
+}
+
+func NewIndexStore(db *pgxpool.Pool) *IndexStore {
+	return &IndexStore{
+		db:  db,
+		id:  func() (uuid.UUID, error) { return uuid.NewV7() },
+		now: func() time.Time { return time.Now().UTC() },
+	}
+}
+
+func (s *IndexStore) Create(ctx context.Context, index model.Index) (model.Index, error) {
+	id, err := s.id()
+	if err != nil {
+		return model.Index{}, fmt.Errorf("create index ID: %w", err)
+	}
+
+	index.ID = id
+	index.CreateTime = s.now()
+
+	_, err = s.db.Exec(ctx, createIndexQuery, index.ID, index.IndexCode, index.Name, index.CreateTime)
+	if err != nil {
+		return model.Index{}, fmt.Errorf("insert index: %w", err)
+	}
+
+	return index, nil
+}
+
+func (s *IndexStore) GetByCode(ctx context.Context, code string) (model.Index, error) {
+	row := s.db.QueryRow(ctx, getIndexByCodeQuery, code)
+
+	var index model.Index
+
+	err := row.Scan(&index.ID, &index.IndexCode, &index.Name, &index.CreateTime)
+	if errors.Is(err, sql.ErrNoRows) {
+		return model.Index{}, model.ErrNotFound
+	}
+	if err != nil {
+		return model.Index{}, fmt.Errorf("select index by code: %w", err)
+	}
+
+	return index, nil
+}
