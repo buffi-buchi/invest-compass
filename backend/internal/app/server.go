@@ -67,6 +67,10 @@ func RunServer() error {
 	// Configure stores.
 	userStore := postgres.NewUserStore(pool)
 	portfolioStore := postgres.NewPortfolioStore(pool)
+	indexStore := postgres.NewIndexStore(pool)
+	protfilioeSecurityStore := postgres.NewSecurityStore(pool)
+	securityStore := postgres.NewSecurityStore(pool)
+	transactionStore := postgres.NewTransactionStore(pool)
 
 	// Configure services.
 	authService := auth.NewService(userStore, jwtProvider)
