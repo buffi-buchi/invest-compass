@@ -4,7 +4,7 @@
 CREATE TABLE IF NOT EXISTS indexes
 (
     id          UUID        NOT NULL,
-    index_code  VARCHAR     NOT NULL UNIQUE,  -- например "MOEXBC"
+    ticker      VARCHAR     NOT NULL UNIQUE,  -- например "MOEXBC"
     name        VARCHAR     NOT NULL,
     create_time TIMESTAMPTZ NOT NULL DEFAULT now()
 
