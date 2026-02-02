@@ -45,7 +45,7 @@ func (s *IndexStore) Create(ctx context.Context, index model.Index) (model.Index
 	index.ID = id
 	index.CreateTime = s.now()
 
-	_, err = s.db.Exec(ctx, createIndexQuery, index.ID, index.IndexCode, index.Name, index.CreateTime)
+	_, err = s.db.Exec(ctx, createIndexQuery, index.ID, index.Ticker, index.Name, index.CreateTime)
 	if err != nil {
 		return model.Index{}, fmt.Errorf("insert index: %w", err)
 	}
@@ -58,7 +58,7 @@ func (s *IndexStore) GetByCode(ctx context.Context, code string) (model.Index, e
 
 	var index model.Index
 
-	err := row.Scan(&index.ID, &index.IndexCode, &index.Name, &index.CreateTime)
+	err := row.Scan(&index.ID, &index.Ticker, &index.Name, &index.CreateTime)
 	if errors.Is(err, sql.ErrNoRows) {
 		return model.Index{}, model.ErrNotFound
 	}

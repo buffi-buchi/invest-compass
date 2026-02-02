@@ -8,7 +8,7 @@ import (
 
 type Index struct {
 	ID         uuid.UUID
-	ticker     string
+	Ticker     string
 	Name       string
 	CreateTime time.Time
 }
