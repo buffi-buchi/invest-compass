@@ -115,8 +115,8 @@ func (s *SecurityStore) GetBySecID(ctx context.Context, secID string) (model.Sec
 	return security, nil
 }
 
-func (s *SecurityStore) List(ctx context.Context, limit, offset int64) ([]model.Security, error) {
-	rows, err := s.db.Query(ctx, listSecuritiesQuery, limit, offset)
+func (s *SecurityStore) List(ctx context.Context, limit, offset int64, ids []uuid.UUID) ([]model.Security, error) {
+	rows, err := s.db.Query(ctx, listSecuritiesQuery, limit, offset, ids)
 	if err != nil {
 		return nil, fmt.Errorf("select securities: %w", err)
 	}
