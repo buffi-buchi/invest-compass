@@ -35,7 +35,7 @@ func NewPortfolioSecurityStore(db *pgxpool.Pool) *PortfolioSecurityStore {
 	}
 }
 
-func (s *PortfolioSecurityStore) Upsert(ctx context.Context, ps model.PortfolioSecurity) (model.PortfolioSecurity, error) {
+func (s *PortfolioSecurityStore) Create(ctx context.Context, ps model.PortfolioSecurity) (model.PortfolioSecurity, error) {
 	id, err := s.id()
 	if err != nil {
 		return model.PortfolioSecurity{}, fmt.Errorf("create portfolio_security ID: %w", err)
