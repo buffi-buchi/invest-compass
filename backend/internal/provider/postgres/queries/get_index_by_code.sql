@@ -1,3 +1,3 @@
-SELECT id, index_code, name, create_time
+SELECT id, ticker, name, create_time
 FROM indexes
-WHERE index_code = $1
+WHERE ticker = $1

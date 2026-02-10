@@ -19,7 +19,7 @@ var (
 	createTestIndexQuery string
 )
 
-func TestIndexStore_GeByCode(t *testing.T) {
+func TestIndexStore_GeByTicker(t *testing.T) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
@@ -30,7 +30,7 @@ func TestIndexStore_GeByCode(t *testing.T) {
 		run  func(t *testing.T)
 	}{
 		{
-			name: "GetByCode success",
+			name: "GetByTicker success",
 			run: func(t *testing.T) {
 				store := &IndexStore{
 					db: db,
@@ -49,7 +49,7 @@ func TestIndexStore_GeByCode(t *testing.T) {
 
 				assert.Equal(t, model.Index{
 					ID:         uuid.MustParse("6f1b2a6e-9c3e-4a2d-8b7f-3e5f1c9a4d21"),
-					Code:       "MOEXBC",
+					Ticker:     "MOEXBC",
 					Name:       "MOEXBC",
 					CreateTime: now,
 				}, gotIndex)

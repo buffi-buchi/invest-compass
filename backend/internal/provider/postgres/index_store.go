@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 
 	"github.com/buffi-buchi/invest-compass/backend/internal/domain/model"
@@ -20,6 +21,9 @@ var (
 
 	//go:embed queries/get_index_by_code.sql
 	getIndexByCodeQuery string
+
+	//go:embed queries/get_all_indexes.sql
+	getAllIndexesQuery string
 )
 
 type IndexStore struct {
@@ -53,7 +57,7 @@ func (s *IndexStore) Create(ctx context.Context, index model.Index) (model.Index
 	return index, nil
 }
 
-func (s *IndexStore) GetByCode(ctx context.Context, code string) (model.Index, error) {
+func (s *IndexStore) GetByTicker(ctx context.Context, code string) (model.Index, error) {
 	row := s.db.QueryRow(ctx, getIndexByCodeQuery, code)
 
 	var index model.Index
@@ -63,8 +67,28 @@ func (s *IndexStore) GetByCode(ctx context.Context, code string) (model.Index, e
 		return model.Index{}, model.ErrNotFound
 	}
 	if err != nil {
-		return model.Index{}, fmt.Errorf("select index by code: %w", err)
+		return model.Index{}, fmt.Errorf("select index by ticker: %w", err)
 	}
 
 	return index, nil
+}
+
+func (s *IndexStore) getAll(ctx context.Context, limit int64,
+	offset int64) ([]model.Index, error) {
+	rows, err := s.db.Query(ctx, getAllIndexesQuery, limit, offset)
+	if err != nil {
+		return nil, fmt.Errorf("select indexes: %w", err)
+	}
+
+	indexes, err := pgx.CollectRows(rows, func(row pgx.CollectableRow) (model.Index, error) {
+		var index model.Index
+
+		return index, row.Scan(&index.ID, &index.Ticker, &index.Name, &index.CreateTime)
+	})
+
+	if err != nil {
+		return nil, fmt.Errorf("select indexes: %w", err)
+	}
+
+	return indexes, nil
 }
