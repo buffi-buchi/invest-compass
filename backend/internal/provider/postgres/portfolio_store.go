@@ -51,7 +51,7 @@ func (s *PortfolioStore) Create(ctx context.Context, ps model.Portfolio) (model.
 	return ps, nil
 }
 
-func (s *PortfolioStore) GeByUserID(
+func (s *PortfolioStore) GetByUserID(
 	ctx context.Context,
 	userID uuid.UUID,
 	limit int64,
