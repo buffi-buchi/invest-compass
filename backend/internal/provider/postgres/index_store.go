@@ -22,7 +22,7 @@ var (
 	//go:embed queries/get_index_by_code.sql
 	getIndexByCodeQuery string
 
-	//go:embed queries/get_all_indexes.sql
+	//go:embed queries/list_indexes.sql
 	getAllIndexesQuery string
 )
 

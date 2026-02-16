@@ -18,8 +18,8 @@ var (
 	//go:embed testdata/create_test_index.sql
 	createTestIndexQuery string
 
-	//go:embed testdata/create_test_indexes.sql
-	createTestIndexesQuery string
+	//go:embed testdata/list_indexes.sql
+	listIndexesQuery string
 )
 
 func TestIndexStore_GeByTicker(t *testing.T) {
@@ -70,7 +70,7 @@ func TestIndexStore_GeByTicker(t *testing.T) {
 				}
 
 				// Act.
-				_, err = db.Exec(ctx, createTestIndexexQuery)
+				_, err = db.Exec(ctx, listIndexexQuery)
 				require.NoError(t, err)
 
 				gotIndexes, gotErr := store.List(ctx, 5, 3)
