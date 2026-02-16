@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS securities
     short_name  VARCHAR     NOT NULL,
     type        security_type NOT NULL,
     extra       JSONB,                        -- для специфических полей
-    create_time TIMESTAMPTZ NOT NULL DEFAULT now()
+    create_time TIMESTAMPTZ NOT NULL DEFAULT now(),
 
     PRIMARY KEY (id)
 );
