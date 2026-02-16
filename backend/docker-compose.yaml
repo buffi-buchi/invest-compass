@@ -17,7 +17,7 @@ services:
       - "8000:80"
       - "8004:84"
     volumes:
-      - "./configs/server.yaml:server.yaml"
+      - "./configs/server.yaml:/server.yaml"
     environment:
       SERVER_CONFIG_PATH: server.yaml
     depends_on:
