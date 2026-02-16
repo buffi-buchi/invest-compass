@@ -40,7 +40,7 @@ func TestIndexStore_GeByTicker(t *testing.T) {
 				}
 
 				// Act.
-				_, err = db.Exec(ctx, createTestIndexQuery)
+				_, err := db.Exec(ctx, createTestIndexQuery)
 				require.NoError(t, err)
 
 				gotIndex, gotErr := store.GetByTicker(ctx, "MOEXBC")
@@ -70,7 +70,7 @@ func TestIndexStore_GeByTicker(t *testing.T) {
 				}
 
 				// Act.
-				_, err = db.Exec(ctx, createTestIndexesQuery)
+				_, err := db.Exec(ctx, createTestIndexesQuery)
 				require.NoError(t, err)
 
 				gotIndexes, gotErr := store.List(ctx, 5, 3)
