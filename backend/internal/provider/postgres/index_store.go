@@ -73,7 +73,7 @@ func (s *IndexStore) GetByTicker(ctx context.Context, code string) (model.Index,
 	return index, nil
 }
 
-func (s *IndexStore) getAll(ctx context.Context, limit int64,
+func (s *IndexStore) List(ctx context.Context, limit int64,
 	offset int64) ([]model.Index, error) {
 	rows, err := s.db.Query(ctx, getAllIndexesQuery, limit, offset)
 	if err != nil {
