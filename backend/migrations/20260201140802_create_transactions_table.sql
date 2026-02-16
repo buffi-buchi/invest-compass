@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS transactions
 (
     id           UUID       NOT NULL,
     portfolio_id UUID       NOT NULL,
-    security_id INT         NOT NULL,
+    security_id  UUID         NOT NULL,
     amount      INTEGER,
     price       NUMERIC(18, 4) NOT NULL,          -- цена за единицу
     trade_date  TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
