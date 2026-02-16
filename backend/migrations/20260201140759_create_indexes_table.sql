@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS indexes
     PRIMARY KEY (id)
 );
 
-CREATE INDEX IF NOT EXISTS indexes_code_idx ON indexes (index_code);
+CREATE INDEX IF NOT EXISTS indexes_code_idx ON indexes (ticker);
 
 -- +goose StatementEnd
 
