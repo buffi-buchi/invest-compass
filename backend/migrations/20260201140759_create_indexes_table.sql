@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS indexes
     id          UUID        NOT NULL,
     ticker      VARCHAR     NOT NULL UNIQUE,  -- например "MOEXBC"
     name        VARCHAR     NOT NULL,
-    create_time TIMESTAMPTZ NOT NULL DEFAULT now()
+    create_time TIMESTAMPTZ NOT NULL DEFAULT now(),
 
     PRIMARY KEY (id)
 );
