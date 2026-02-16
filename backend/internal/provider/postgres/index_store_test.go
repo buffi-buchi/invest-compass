@@ -17,6 +17,9 @@ import (
 var (
 	//go:embed testdata/create_test_index.sql
 	createTestIndexQuery string
+
+	//go:embed testdata/create_test_indexes.sql
+	createTestIndexesQuery string
 )
 
 func TestIndexStore_GeByTicker(t *testing.T) {
@@ -53,6 +56,64 @@ func TestIndexStore_GeByTicker(t *testing.T) {
 					Name:       "MOEXBC",
 					CreateTime: now,
 				}, gotIndex)
+
+				// Cleanup.
+				_, err = db.Exec(ctx, `TRUNCATE TABLE "indexes"`)
+				require.NoError(t, err)
+			},
+		},
+		{
+			name: "List success",
+			run: func(t *testing.T) {
+				store := &IndexStore{
+					db: db,
+				}
+
+				// Act.
+				_, err = db.Exec(ctx, createTestIndexexQuery)
+				require.NoError(t, err)
+
+				gotIndexes, gotErr := store.List(ctx, 5, 3)
+
+				// Check.
+				require.NoError(t, gotErr)
+
+				for i := range gotIndexes {
+					gotIndexes[i].CreateTime = gotIndexes[i].CreateTime.UTC()
+				}
+
+				assert.ElementsMatch(t, []model.Index{
+					{
+						ID:         uuid.MustParse("a6d2e5b9-3c41-4f7a-8e2d-5b9f1c3a7e64"),
+						Ticker:     "IMOEX2",
+						Name:       "IMOEX",
+						CreateTime: now,
+					},
+					{
+						ID:         uuid.MustParse("9b1e4c72-6d3f-4a8b-b2e7-1c5f9a3d8e20"),
+						Ticker:     "IMOEX3",
+						Name:       "IMOEX",
+						CreateTime: now,
+					},
+					{
+						ID:         uuid.MustParse("4e8a2d1c-7f35-4b9e-9a61-3d7c2f5b8e14"),
+						Ticker:     "IMOEX4",
+						Name:       "IMOEX",
+						CreateTime: now,
+					},
+					{
+						ID:         uuid.MustParse("c2f7a9d4-5e31-4c8b-8d2f-6a1e3b9c4d75"),
+						Ticker:     "IMOEX5",
+						Name:       "IMOEX",
+						CreateTime: now,
+					},
+					{
+						ID:         uuid.MustParse("7a5d3c9e-1b42-4e8f-a6d3-9c2b7e1f4a68"),
+						Ticker:     "IMOEX6",
+						Name:       "IMOEX",
+						CreateTime: now,
+					},
+				}, gotIndexes)
 
 				// Cleanup.
 				_, err = db.Exec(ctx, `TRUNCATE TABLE "indexes"`)
