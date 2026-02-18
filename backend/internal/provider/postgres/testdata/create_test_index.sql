@@ -1,4 +1,4 @@
-INSERT INTO indexes (id, index_code, name, create_time)
+INSERT INTO indexes (id, ticker, name, create_time)
 VALUES (
 '6f1b2a6e-9c3e-4a2d-8b7f-3e5f1c9a4d21',
 'MOEXBC',

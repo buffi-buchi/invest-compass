@@ -1,4 +1,4 @@
-SELECT id, code, name, create_time
+SELECT id, ticker, name, create_time
 FROM indexes
 ORDER BY id
-LIMIT $2 OFFSET $3;
+LIMIT $1 OFFSET $2;
