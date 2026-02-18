@@ -43,7 +43,7 @@ func TestPortfolioStore_GeByUserID(t *testing.T) {
 				_, err = db.Exec(ctx, createTestPortfoliosQuery)
 				require.NoError(t, err)
 
-				gotPortfolios, gotErr := store.GeByUserID(ctx, uuid.MustParse("463d4cc6-023a-4d54-9da5-e6445367bf21"), 10, 0)
+				gotPortfolios, gotErr := store.GetByUserID(ctx, uuid.MustParse("463d4cc6-023a-4d54-9da5-e6445367bf21"), 10, 0)
 
 				// Check.
 				require.NoError(t, gotErr)
@@ -75,8 +75,6 @@ func TestPortfolioStore_GeByUserID(t *testing.T) {
 	}
 
 	for _, tc := range cases {
-		t.Run(tc.name, func(t *testing.T) {
-			tc.run(t)
-		})
+		t.Run(tc.name, tc.run)
 	}
 }
