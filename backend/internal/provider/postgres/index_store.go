@@ -6,11 +6,12 @@ import (
 	_ "embed"
 	"errors"
 	"fmt"
+	"time"
+
 	"github.com/buffi-buchi/invest-compass/backend/internal/domain/model"
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
-	"time"
 )
 
 var (
@@ -44,6 +45,7 @@ func (s *IndexStore) Create(ctx context.Context, index model.Index) (model.Index
 
 	index.ID = id
 	index.CreateTime = s.now()
+
 	_, err = s.db.Exec(ctx, createIndexQuery, index.ID, index.Ticker, index.Name, index.CreateTime)
 
 	if err != nil {
