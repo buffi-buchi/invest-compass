@@ -25,7 +25,6 @@ var (
 
 type IndexStore struct {
 	db  *pgxpool.Pool
-	id  func() (uuid.UUID, error)
 	now func() time.Time
 }
 
