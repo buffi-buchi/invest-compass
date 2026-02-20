@@ -48,7 +48,7 @@ func TestIndexStore_GeByTicker(t *testing.T) {
 
 				assert.Equal(t, model.Index{
 					Ticker:     "MOEXBC",
-					Name:       "MOEXBC",
+					ShortName:  "MOEXBC",
 					CreateTime: now,
 				}, gotIndex)
 
@@ -80,12 +80,12 @@ func TestIndexStore_GeByTicker(t *testing.T) {
 				assert.ElementsMatch(t, []model.Index{
 					{
 						Ticker:     "IMOEX1",
-						Name:       "IMOEX",
+						ShortName:  "IMOEX",
 						CreateTime: now,
 					},
 					{
 						Ticker:     "MOEXBC",
-						Name:       "MOEXBC",
+						ShortName:  "MOEXBC",
 						CreateTime: now,
 					},
 				}, gotIndexes)

@@ -6,6 +6,6 @@ import (
 
 type Index struct {
 	Ticker     string
-	Name       string
+	ShortName  string
 	CreateTime time.Time
 }

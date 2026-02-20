@@ -4,7 +4,7 @@
 CREATE TABLE IF NOT EXISTS indexes
 (
     ticker      VARCHAR,
-    name        VARCHAR     NOT NULL,
+    short_name        VARCHAR     NOT NULL,
     create_time TIMESTAMPTZ NOT NULL DEFAULT now(),
 
     PRIMARY KEY (ticker)
@@ -18,3 +18,4 @@ CREATE TABLE IF NOT EXISTS indexes
 DROP TABLE IF EXISTS indexes;
 
 -- +goose StatementEnd
+
