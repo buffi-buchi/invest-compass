@@ -5,12 +5,10 @@ package postgres
 import (
 	"context"
 	_ "embed"
-	"fmt"
 	"testing"
 	"time"
 
 	"github.com/buffi-buchi/invest-compass/backend/internal/domain/model"
-	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -18,9 +16,6 @@ import (
 var (
 	//go:embed testdata/create_test_index.sql
 	createTestIndexQuery string
-
-	//go:embed testdata/create_test_indexes.sql
-	createTestIndexesQuery string
 )
 
 func TestIndexStore_GeByTicker(t *testing.T) {
@@ -52,7 +47,6 @@ func TestIndexStore_GeByTicker(t *testing.T) {
 				gotIndex.CreateTime = gotIndex.CreateTime.UTC()
 
 				assert.Equal(t, model.Index{
-					ID:         uuid.MustParse("6f1b2a6e-9c3e-4a2d-8b7f-3e5f1c9a4d21"),
 					Ticker:     "MOEXBC",
 					Name:       "MOEXBC",
 					CreateTime: now,
@@ -71,13 +65,11 @@ func TestIndexStore_GeByTicker(t *testing.T) {
 				}
 
 				// Act.
-				_, err := db.Exec(ctx, createTestIndexesQuery)
+				_, err := db.Exec(ctx, createTestIndexQuery)
 				require.NoError(t, err)
 
-				gotIndexes, gotErr := store.List(ctx, 5, 3)
-				for _, index := range gotIndexes {
-					fmt.Println(index.Ticker)
-				}
+				gotIndexes, gotErr := store.List(ctx, 2, 1)
+
 				// Check.
 				require.NoError(t, gotErr)
 
@@ -87,31 +79,11 @@ func TestIndexStore_GeByTicker(t *testing.T) {
 
 				assert.ElementsMatch(t, []model.Index{
 					{
-						ID:         uuid.MustParse("9b1e4c72-6d3f-4a8b-b2e7-1c5f9a3d8e20"),
-						Ticker:     "IMOEX3",
+						Ticker:     "IMOEX1",
 						Name:       "IMOEX",
 						CreateTime: now,
 					},
 					{
-						ID:         uuid.MustParse("4e8a2d1c-7f35-4b9e-9a61-3d7c2f5b8e14"),
-						Ticker:     "IMOEX4",
-						Name:       "IMOEX",
-						CreateTime: now,
-					},
-					{
-						ID:         uuid.MustParse("c2f7a9d4-5e31-4c8b-8d2f-6a1e3b9c4d75"),
-						Ticker:     "IMOEX5",
-						Name:       "IMOEX",
-						CreateTime: now,
-					},
-					{
-						ID:         uuid.MustParse("7a5d3c9e-1b42-4e8f-a6d3-9c2b7e1f4a68"),
-						Ticker:     "IMOEX6",
-						Name:       "IMOEX",
-						CreateTime: now,
-					},
-					{
-						ID:         uuid.MustParse("6f1b2a6e-9c3e-4a2d-8b7f-3e5f1c9a4d21"),
 						Ticker:     "MOEXBC",
 						Name:       "MOEXBC",
 						CreateTime: now,

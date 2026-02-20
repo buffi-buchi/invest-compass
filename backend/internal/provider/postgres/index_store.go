@@ -32,21 +32,14 @@ type IndexStore struct {
 func NewIndexStore(db *pgxpool.Pool) *IndexStore {
 	return &IndexStore{
 		db:  db,
-		id:  func() (uuid.UUID, error) { return uuid.NewV7() },
 		now: func() time.Time { return time.Now().UTC() },
 	}
 }
 func (s *IndexStore) Create(ctx context.Context, index model.Index) (model.Index, error) {
-	id, err := s.id()
 
-	if err != nil {
-		return model.Index{}, fmt.Errorf("create index ID: %w", err)
-	}
-
-	index.ID = id
 	index.CreateTime = s.now()
 
-	_, err = s.db.Exec(ctx, createIndexQuery, index.ID, index.Ticker, index.Name, index.CreateTime)
+	_, err := s.db.Exec(ctx, createIndexQuery, index.Ticker, index.Name, index.CreateTime)
 
 	if err != nil {
 		return model.Index{}, fmt.Errorf("insert index: %w", err)
@@ -57,7 +50,7 @@ func (s *IndexStore) Create(ctx context.Context, index model.Index) (model.Index
 func (s *IndexStore) GetByTicker(ctx context.Context, code string) (model.Index, error) {
 	row := s.db.QueryRow(ctx, getIndexByCodeQuery, code)
 	var index model.Index
-	err := row.Scan(&index.ID, &index.Ticker, &index.Name, &index.CreateTime)
+	err := row.Scan(&index.Ticker, &index.Name, &index.CreateTime)
 
 	if errors.Is(err, sql.ErrNoRows) {
 		return model.Index{}, model.ErrNotFound
@@ -79,7 +72,7 @@ func (s *IndexStore) List(ctx context.Context, limit int64,
 
 	indexes, err := pgx.CollectRows(rows, func(row pgx.CollectableRow) (model.Index, error) {
 		var index model.Index
-		return index, row.Scan(&index.ID, &index.Ticker, &index.Name, &index.CreateTime)
+		return index, row.Scan(&index.Ticker, &index.Name, &index.CreateTime)
 	})
 
 	if err != nil {
