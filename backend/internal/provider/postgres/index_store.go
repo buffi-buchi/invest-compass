@@ -59,8 +59,11 @@ func (s *IndexStore) GetByTicker(ctx context.Context, code string) (model.Index,
 
 	return index, nil
 }
-func (s *IndexStore) List(ctx context.Context, limit int64,
-	offset int64) ([]model.Index, error) {
+func (s *IndexStore) List(
+	ctx context.Context,
+	limit int64,
+	offset int64,
+) ([]model.Index, error) {
 	rows, err := s.db.Query(ctx, listIndexesQuery, limit, offset)
 	if err != nil {
 		return nil, fmt.Errorf("select indexes: %w", err)
