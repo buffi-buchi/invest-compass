@@ -9,7 +9,6 @@ import (
 	"time"
 
 	"github.com/buffi-buchi/invest-compass/backend/internal/domain/model"
-	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
