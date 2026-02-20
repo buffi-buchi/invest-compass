@@ -40,7 +40,6 @@ func (s *IndexStore) Create(ctx context.Context, index model.Index) (model.Index
 	index.CreateTime = s.now()
 
 	_, err := s.db.Exec(ctx, createIndexQuery, index.Ticker, index.Name, index.CreateTime)
-
 	if err != nil {
 		return model.Index{}, fmt.Errorf("insert index: %w", err)
 	}
@@ -51,11 +50,9 @@ func (s *IndexStore) GetByTicker(ctx context.Context, code string) (model.Index,
 	row := s.db.QueryRow(ctx, getIndexByCodeQuery, code)
 	var index model.Index
 	err := row.Scan(&index.Ticker, &index.Name, &index.CreateTime)
-
 	if errors.Is(err, sql.ErrNoRows) {
 		return model.Index{}, model.ErrNotFound
 	}
-
 	if err != nil {
 		return model.Index{}, fmt.Errorf("select index by ticker: %w", err)
 	}
@@ -65,7 +62,6 @@ func (s *IndexStore) GetByTicker(ctx context.Context, code string) (model.Index,
 func (s *IndexStore) List(ctx context.Context, limit int64,
 	offset int64) ([]model.Index, error) {
 	rows, err := s.db.Query(ctx, listIndexesQuery, limit, offset)
-
 	if err != nil {
 		return nil, fmt.Errorf("select indexes: %w", err)
 	}
@@ -74,7 +70,6 @@ func (s *IndexStore) List(ctx context.Context, limit int64,
 		var index model.Index
 		return index, row.Scan(&index.Ticker, &index.Name, &index.CreateTime)
 	})
-
 	if err != nil {
 		return nil, fmt.Errorf("select indexes: %w", err)
 	}
