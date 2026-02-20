@@ -20,7 +20,7 @@ var (
 	//go:embed queries/get_index_by_code.sql
 	getIndexByCodeQuery string
 	//go:embed queries/list_indexes.sql
-	getAllIndexesQuery string
+	listIndexesQuery string
 )
 
 type IndexStore struct {
@@ -64,7 +64,7 @@ func (s *IndexStore) GetByTicker(ctx context.Context, code string) (model.Index,
 }
 func (s *IndexStore) List(ctx context.Context, limit int64,
 	offset int64) ([]model.Index, error) {
-	rows, err := s.db.Query(ctx, getAllIndexesQuery, limit, offset)
+	rows, err := s.db.Query(ctx, listIndexesQuery, limit, offset)
 
 	if err != nil {
 		return nil, fmt.Errorf("select indexes: %w", err)
