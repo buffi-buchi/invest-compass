@@ -44,36 +44,36 @@ func (s *SecurityStore) Create(ctx context.Context, security model.Security) (mo
 
 	return security, nil
 }
-func (s *SecurityStore) GetByTicker(ctx context.Context, code string) (model.Index, error) {
-	row := s.db.QueryRow(ctx, getIndexByCodeQuery, code)
-	var index model.Index
-	err := row.Scan(&index.Ticker, &index.Name, &index.CreateTime)
+func (s *SecurityStore) GetByTicker(ctx context.Context, code string) (model.Security, error) {
+	row := s.db.QueryRow(ctx, getSecurityByTickerQuery, code)
+	var security model.Security
+	err := row.Scan(&security.Ticker, &security.ShortName, &security.CreateTime)
 	if errors.Is(err, sql.ErrNoRows) {
-		return model.Index{}, model.ErrNotFound
+		return model.Security{}, model.ErrNotFound
 	}
 	if err != nil {
-		return model.Index{}, fmt.Errorf("select index by ticker: %w", err)
+		return model.Security{}, fmt.Errorf("select security by ticker: %w", err)
 	}
 
-	return index, nil
+	return security, nil
 }
 func (s *SecurityStore) List(
 	ctx context.Context,
 	limit int64,
 	offset int64,
-) ([]model.Index, error) {
-	rows, err := s.db.Query(ctx, listIndexesQuery, limit, offset)
+) ([]model.Security, error) {
+	rows, err := s.db.Query(ctx, listSecurityQuery, limit, offset)
 	if err != nil {
-		return nil, fmt.Errorf("select indexes: %w", err)
+		return nil, fmt.Errorf("select securities: %w", err)
 	}
 
-	indexes, err := pgx.CollectRows(rows, func(row pgx.CollectableRow) (model.Index, error) {
-		var index model.Index
-		return index, row.Scan(&index.Ticker, &index.Name, &index.CreateTime)
+	securities, err := pgx.CollectRows(rows, func(row pgx.CollectableRow) (model.Security, error) {
+		var security model.Security
+		return security, row.Scan(&security.Ticker, &security.ShortName, &security.CreateTime)
 	})
 	if err != nil {
 		return nil, fmt.Errorf("select indexes: %w", err)
 	}
 
-	return indexes, nil
+	return securities, nil
 }
