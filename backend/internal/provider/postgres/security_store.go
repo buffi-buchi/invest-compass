@@ -18,8 +18,8 @@ var (
 	createSecurityQuery string
 	//go:embed queries/get_security_by_ticker.sql
 	getSecurityByTickerQuery string
-	//go:embed queries/list_security.sql
-	listSecurityQuery string
+	//go:embed queries/list_securities.sql
+	listSecuritiesQuery string
 )
 
 type SecurityStore struct {
@@ -63,7 +63,7 @@ func (s *SecurityStore) List(
 	offset int64,
 	tickers []string,
 ) ([]model.Security, error) {
-	rows, err := s.db.Query(ctx, listSecurityQuery, limit, offset, tickers)
+	rows, err := s.db.Query(ctx, listSecuritiesQuery, limit, offset, tickers)
 	if err != nil {
 		return nil, fmt.Errorf("select securities: %w", err)
 	}
