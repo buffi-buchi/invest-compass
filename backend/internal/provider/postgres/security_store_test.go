@@ -14,11 +14,11 @@ import (
 )
 
 var (
-	//go:embed testdata/create_test_index.sql
-	createTestIndexQuery string
+	//go:embed testdata/create_test_securities.sql
+	createTestSecuritiesQuery string
 )
 
-func TestIndexStore(t *testing.T) {
+func TestSecurityStore(t *testing.T) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
@@ -31,67 +31,67 @@ func TestIndexStore(t *testing.T) {
 		{
 			name: "GetByTicker success",
 			run: func(t *testing.T) {
-				store := IndexStore{
+				store := SecurityStore{
 					db: db,
 				}
 
 				// Act.
-				_, err := db.Exec(ctx, createTestIndexQuery)
+				_, err := db.Exec(ctx, createTestSecuritiesQuery)
 				require.NoError(t, err)
 
-				gotIndex, gotErr := store.GetByTicker(ctx, "MOEXBC")
+				gotSecurity, gotErr := store.GetByTicker(ctx, "LKOH")
 
 				// Check.
 				require.NoError(t, gotErr)
 
-				gotIndex.CreateTime = gotIndex.CreateTime.UTC()
+				gotSecurity.CreateTime = gotSecurity.CreateTime.UTC()
 
-				assert.Equal(t, model.Index{
-					Ticker:     "MOEXBC",
-					ShortName:  "MOEXBC",
+				assert.Equal(t, model.Security{
+					Ticker:     "LKOH",
+					ShortName:  "ЛУКОЙЛ",
 					CreateTime: now,
-				}, gotIndex)
+				}, gotSecurity)
 
 				// Cleanup.
-				_, err = db.Exec(ctx, `TRUNCATE TABLE "indexes" CASCADE`)
+				_, err = db.Exec(ctx, `TRUNCATE TABLE "securities" CASCADE`)
 				require.NoError(t, err)
 			},
 		},
 		{
 			name: "List success",
 			run: func(t *testing.T) {
-				store := &IndexStore{
+				store := &SecurityStore{
 					db: db,
 				}
 
 				// Act.
-				_, err := db.Exec(ctx, createTestIndexQuery)
+				_, err := db.Exec(ctx, createTestSecuritiesQuery)
 				require.NoError(t, err)
 
-				gotIndexes, gotErr := store.List(ctx, 2, 1)
+				gotSecurities, gotErr := store.List(ctx, 2, 1, nil)
 
 				// Check.
 				require.NoError(t, gotErr)
 
-				for i := range gotIndexes {
-					gotIndexes[i].CreateTime = gotIndexes[i].CreateTime.UTC()
+				for i := range gotSecurities {
+					gotSecurities[i].CreateTime = gotSecurities[i].CreateTime.UTC()
 				}
 
-				assert.ElementsMatch(t, []model.Index{
+				assert.ElementsMatch(t, []model.Security{
 					{
-						Ticker:     "IMOEX1",
-						ShortName:  "IMOEX",
+						Ticker:     "GMKN",
+						ShortName:  "ГМКНорНик",
 						CreateTime: now,
 					},
 					{
-						Ticker:     "MOEXBC",
-						ShortName:  "MOEXBC",
+						Ticker:     "LKOH",
+						ShortName:  "ЛУКОЙЛ",
 						CreateTime: now,
 					},
-				}, gotIndexes)
+				}, gotSecurities)
 
 				// Cleanup.
-				_, err = db.Exec(ctx, `TRUNCATE TABLE "indexes" CASCADE`)
+				_, err = db.Exec(ctx, `TRUNCATE TABLE "securities" CASCADE`)
 				require.NoError(t, err)
 			},
 		},

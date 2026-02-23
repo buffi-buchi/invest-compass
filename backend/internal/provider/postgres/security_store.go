@@ -61,8 +61,9 @@ func (s *SecurityStore) List(
 	ctx context.Context,
 	limit int64,
 	offset int64,
+	tickers []string,
 ) ([]model.Security, error) {
-	rows, err := s.db.Query(ctx, listSecurityQuery, limit, offset)
+	rows, err := s.db.Query(ctx, listSecurityQuery, limit, offset, tickers)
 	if err != nil {
 		return nil, fmt.Errorf("select securities: %w", err)
 	}
@@ -72,7 +73,7 @@ func (s *SecurityStore) List(
 		return security, row.Scan(&security.Ticker, &security.ShortName, &security.CreateTime)
 	})
 	if err != nil {
-		return nil, fmt.Errorf("select indexes: %w", err)
+		return nil, fmt.Errorf("select securities: %w", err)
 	}
 
 	return securities, nil
