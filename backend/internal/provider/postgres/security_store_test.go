@@ -79,6 +79,24 @@ func TestSecurityStore_GetByTicker(t *testing.T) {
 				require.NoError(t, err)
 			},
 		},
+	}
+
+	for _, tc := range cases {
+		t.Run(tc.name, tc.run)
+
+	}
+}
+
+func TestSecurityStore_List(t *testing.T) {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	now := time.Date(2025, time.September, 10, 0, 0, 0, 0, time.UTC)
+
+	cases := []struct {
+		name string
+		run  func(t *testing.T)
+	}{
 		{
 			name: "List success",
 			run: func(t *testing.T) {
@@ -111,6 +129,67 @@ func TestSecurityStore_GetByTicker(t *testing.T) {
 						CreateTime: now,
 					},
 				}, gotSecurities)
+
+				// Cleanup.
+				_, err = db.Exec(ctx, `TRUNCATE TABLE "securities" CASCADE`)
+				require.NoError(t, err)
+			},
+		},
+		{
+			name: "List success with tickers",
+			run: func(t *testing.T) {
+				store := &SecurityStore{
+					db: db,
+				}
+
+				// Act.
+				_, err := db.Exec(ctx, createTestSecuritiesQuery)
+				require.NoError(t, err)
+
+				gotSecurities, gotErr := store.List(ctx, 2, 1, []string{"GAZP", "LKOH"})
+
+				// Check.
+				require.NoError(t, gotErr)
+
+				for i := range gotSecurities {
+					gotSecurities[i].CreateTime = gotSecurities[i].CreateTime.UTC()
+				}
+
+				assert.ElementsMatch(t, []model.Security{
+					{
+						Ticker:     "GAZP",
+						ShortName:  "ГАЗПРОМ ао",
+						CreateTime: now,
+					},
+					{
+						Ticker:     "LKOH",
+						ShortName:  "ЛУКОЙЛ",
+						CreateTime: now,
+					},
+				}, gotSecurities)
+
+				// Cleanup.
+				_, err = db.Exec(ctx, `TRUNCATE TABLE "securities" CASCADE`)
+				require.NoError(t, err)
+			},
+		},
+
+		{
+			name: "List not found ticker",
+			run: func(t *testing.T) {
+				store := &SecurityStore{
+					db: db,
+				}
+
+				// Act.
+				_, err := db.Exec(ctx, createTestSecuritiesQuery)
+				require.NoError(t, err)
+
+				gotSecurities, gotErr := store.List(ctx, 2, 1, []string{"T"})
+
+				// Check.
+				require.NoError(t, gotErr)
+				require.Empty(t, gotSecurities)
 
 				// Cleanup.
 				_, err = db.Exec(ctx, `TRUNCATE TABLE "securities" CASCADE`)
