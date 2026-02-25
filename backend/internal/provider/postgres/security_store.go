@@ -45,8 +45,8 @@ func (s *SecurityStore) Create(ctx context.Context, security model.Security) (mo
 	return security, nil
 }
 func (s *SecurityStore) GetByTicker(ctx context.Context, code string) (model.Security, error) {
-	row := s.db.QueryRow(ctx, getSecurityByTickerQuery, code)
 	var security model.Security
+	row := s.db.QueryRow(ctx, getSecurityByTickerQuery, code)
 	err := row.Scan(&security.Ticker, &security.ShortName, &security.CreateTime)
 	if errors.Is(err, sql.ErrNoRows) {
 		return model.Security{}, model.ErrNotFound
