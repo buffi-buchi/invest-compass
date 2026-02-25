@@ -18,7 +18,7 @@ var (
 	createTestIndexQuery string
 )
 
-func TestIndexStore(t *testing.T) {
+func TestIndexStore_GetByTicker(t *testing.T) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
@@ -57,6 +57,47 @@ func TestIndexStore(t *testing.T) {
 				require.NoError(t, err)
 			},
 		},
+		{
+			name: "GetByTicker fail",
+			run: func(t *testing.T) {
+				store := IndexStore{
+					db: db,
+				}
+
+				// Act.
+				_, err := db.Exec(ctx, createTestIndexQuery)
+				require.NoError(t, err)
+
+				gotIndex, gotErr := store.GetByTicker(ctx, "T")
+
+				// Check.
+				require.Equal(t, model.ErrNotFound, gotErr)
+				require.Equal(t, model.Index{}, gotIndex)
+
+				// Cleanup.
+				_, err = db.Exec(ctx, `TRUNCATE TABLE "indexes" CASCADE`)
+				require.NoError(t, err)
+			},
+		},
+	}
+
+	for _, tc := range cases {
+		t.Run(tc.name, tc.run)
+
+	}
+}
+
+func TestIndexStore_List(t *testing.T) {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	now := time.Date(2025, time.September, 10, 0, 0, 0, 0, time.UTC)
+
+	cases := []struct {
+		name string
+		run  func(t *testing.T)
+	}{
+
 		{
 			name: "List success",
 			run: func(t *testing.T) {

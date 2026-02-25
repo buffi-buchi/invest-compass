@@ -146,7 +146,7 @@ func TestSecurityStore_List(t *testing.T) {
 				_, err := db.Exec(ctx, createTestSecuritiesQuery)
 				require.NoError(t, err)
 
-				gotSecurities, gotErr := store.List(ctx, 2, 1, []string{"GAZP", "LKOH"})
+				gotSecurities, gotErr := store.List(ctx, 2, 0, []string{"GAZP", "LKOH"})
 
 				// Check.
 				require.NoError(t, gotErr)
@@ -185,7 +185,7 @@ func TestSecurityStore_List(t *testing.T) {
 				_, err := db.Exec(ctx, createTestSecuritiesQuery)
 				require.NoError(t, err)
 
-				gotSecurities, gotErr := store.List(ctx, 2, 1, []string{"T"})
+				gotSecurities, gotErr := store.List(ctx, 1, 0, []string{"T"})
 
 				// Check.
 				require.NoError(t, gotErr)
