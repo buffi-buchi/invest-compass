@@ -3,7 +3,7 @@
 
 CREATE TABLE IF NOT EXISTS securities
 (
-    ticker      VARCHAR, -- Тикер
+    ticker      VARCHAR,
     short_name  VARCHAR     NOT NULL,
     create_time TIMESTAMPTZ NOT NULL DEFAULT now(),
 
