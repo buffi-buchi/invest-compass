@@ -20,6 +20,8 @@ var (
 	getSecurityByTickerQuery string
 	//go:embed queries/list_securities.sql
 	listSecuritiesQuery string
+	//go:embed queries/list_securities_by_ticker.sql
+	listSecuritiesByTickerQuery string
 )
 
 type SecurityStore struct {
@@ -63,7 +65,16 @@ func (s *SecurityStore) List(
 	offset int64,
 	tickers []string,
 ) ([]model.Security, error) {
-	rows, err := s.db.Query(ctx, listSecuritiesQuery, limit, offset, tickers)
+	var rows pgx.Rows
+	var err error
+
+	if len(tickers) > 0 {
+		rows, err = s.db.Query(ctx, listSecuritiesByTickerQuery, limit, offset, tickers)
+
+	} else {
+		rows, err = s.db.Query(ctx, listSecuritiesQuery, limit, offset)
+	}
+
 	if err != nil {
 		return nil, fmt.Errorf("select securities: %w", err)
 	}
