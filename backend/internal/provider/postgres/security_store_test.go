@@ -18,7 +18,7 @@ var (
 	createTestSecuritiesQuery string
 )
 
-func TestSecurityStore(t *testing.T) {
+func TestSecurityStore_GetByTicker(t *testing.T) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
@@ -51,6 +51,28 @@ func TestSecurityStore(t *testing.T) {
 					ShortName:  "ЛУКОЙЛ",
 					CreateTime: now,
 				}, gotSecurity)
+
+				// Cleanup.
+				_, err = db.Exec(ctx, `TRUNCATE TABLE "securities" CASCADE`)
+				require.NoError(t, err)
+			},
+		},
+		{
+			name: "GetByTicker fail",
+			run: func(t *testing.T) {
+				store := SecurityStore{
+					db: db,
+				}
+
+				// Act.
+				_, err := db.Exec(ctx, createTestSecuritiesQuery)
+				require.NoError(t, err)
+
+				gotSecurity, gotErr := store.GetByTicker(ctx, "T")
+
+				// Check.
+				require.Equal(t, model.ErrNotFound, gotErr)
+				require.Equal(t, model.Security{}, gotSecurity)
 
 				// Cleanup.
 				_, err = db.Exec(ctx, `TRUNCATE TABLE "securities" CASCADE`)
