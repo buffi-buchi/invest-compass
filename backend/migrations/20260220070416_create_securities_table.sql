@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS securities
     create_time TIMESTAMPTZ NOT NULL DEFAULT now(),
 
     PRIMARY KEY (ticker)
-    );
+);
 
 
 -- +goose StatementEnd
