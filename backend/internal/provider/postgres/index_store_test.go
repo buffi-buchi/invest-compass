@@ -23,7 +23,6 @@ func TestIndexStore_GetByTicker(t *testing.T) {
 	defer cancel()
 
 	now := time.Date(2025, time.September, 10, 0, 0, 0, 0, time.UTC)
-
 	cases := []struct {
 		name string
 		run  func(t *testing.T)
@@ -83,7 +82,6 @@ func TestIndexStore_GetByTicker(t *testing.T) {
 
 	for _, tc := range cases {
 		t.Run(tc.name, tc.run)
-
 	}
 }
 
@@ -92,7 +90,6 @@ func TestIndexStore_List(t *testing.T) {
 	defer cancel()
 
 	now := time.Date(2025, time.September, 10, 0, 0, 0, 0, time.UTC)
-
 	cases := []struct {
 		name string
 		run  func(t *testing.T)
@@ -140,6 +137,5 @@ func TestIndexStore_List(t *testing.T) {
 
 	for _, tc := range cases {
 		t.Run(tc.name, tc.run)
-
 	}
 }
