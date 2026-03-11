@@ -18,12 +18,11 @@ var (
 	createTestIndexQuery string
 )
 
-func TestIndexStore_GeByTicker(t *testing.T) {
+func TestIndexStore_GetByTicker(t *testing.T) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
 	now := time.Date(2025, time.September, 10, 0, 0, 0, 0, time.UTC)
-
 	cases := []struct {
 		name string
 		run  func(t *testing.T)
@@ -48,7 +47,7 @@ func TestIndexStore_GeByTicker(t *testing.T) {
 
 				assert.Equal(t, model.Index{
 					Ticker:     "MOEXBC",
-					Name:       "MOEXBC",
+					ShortName:  "MOEXBC",
 					CreateTime: now,
 				}, gotIndex)
 
@@ -57,6 +56,45 @@ func TestIndexStore_GeByTicker(t *testing.T) {
 				require.NoError(t, err)
 			},
 		},
+		{
+			name: "GetByTicker fail",
+			run: func(t *testing.T) {
+				store := IndexStore{
+					db: db,
+				}
+
+				// Act.
+				_, err := db.Exec(ctx, createTestIndexQuery)
+				require.NoError(t, err)
+
+				gotIndex, gotErr := store.GetByTicker(ctx, "T")
+
+				// Check.
+				require.Equal(t, model.ErrNotFound, gotErr)
+				require.Equal(t, model.Index{}, gotIndex)
+
+				// Cleanup.
+				_, err = db.Exec(ctx, `TRUNCATE TABLE "indexes" CASCADE`)
+				require.NoError(t, err)
+			},
+		},
+	}
+
+	for _, tc := range cases {
+		t.Run(tc.name, tc.run)
+	}
+}
+
+func TestIndexStore_List(t *testing.T) {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	now := time.Date(2025, time.September, 10, 0, 0, 0, 0, time.UTC)
+	cases := []struct {
+		name string
+		run  func(t *testing.T)
+	}{
+
 		{
 			name: "List success",
 			run: func(t *testing.T) {
@@ -80,12 +118,12 @@ func TestIndexStore_GeByTicker(t *testing.T) {
 				assert.ElementsMatch(t, []model.Index{
 					{
 						Ticker:     "IMOEX1",
-						Name:       "IMOEX",
+						ShortName:  "IMOEX",
 						CreateTime: now,
 					},
 					{
 						Ticker:     "MOEXBC",
-						Name:       "MOEXBC",
+						ShortName:  "MOEXBC",
 						CreateTime: now,
 					},
 				}, gotIndexes)
@@ -99,6 +137,5 @@ func TestIndexStore_GeByTicker(t *testing.T) {
 
 	for _, tc := range cases {
 		t.Run(tc.name, tc.run)
-
 	}
 }

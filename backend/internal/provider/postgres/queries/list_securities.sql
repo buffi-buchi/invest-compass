@@ -1,4 +1,4 @@
 SELECT ticker, short_name, create_time
-FROM indexes
+FROM securities
 ORDER BY ticker
-LIMIT $1 OFFSET $2;
+    LIMIT $1 OFFSET $2;

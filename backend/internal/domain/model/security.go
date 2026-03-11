@@ -4,7 +4,7 @@ import (
 	"time"
 )
 
-type Index struct {
+type Security struct {
 	Ticker     string
 	ShortName  string
 	CreateTime time.Time
